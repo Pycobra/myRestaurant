@@ -1,0 +1,130 @@
+{% comment %} {% load static %}
+{% block stylesheet1 %}{% static 'styles/account/address_form.css' %}{% endblock %} {% endcomment %}
+
+<div id="address">
+    <i class="fa fa-times times"></i>
+    <div class="form-inside">
+        <h1 class="head">Add Address</h1>
+        <form id="add-address-form" method="post" action="{% url 'account_:add_address' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-row {{addressForm.full_name.name}}">
+              {{ addressForm.full_name}}
+            </div>
+            <div class="input-row {{addressForm.phone.name}}">
+              {{ addressForm.phone}}
+            </div>
+            <div class="input-row {{addressForm.email.name}}">
+              {{ addressForm.email}}
+            </div>
+            <div class="input-row {{addressForm.postal_code.name}}">
+              {{ addressForm.postal_code}}
+            </div>
+            <div class="input-row {{addressForm.city.name}}">
+              {{ addressForm.city}}
+            </div>
+            <div class="input-row {{addressForm.address_line.name}}">
+              {{ addressForm.address_line}}
+            </div>
+            <div class="btn-wrap"> 
+                {% include 'core/with-spinner.html' %}
+                <button type="submit">Sign in</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+{% block scripts %}
+<script>
+    $('.times').on(
+        {click: function(e){
+            $('#form').css('display','none')
+        }
+    })
+    
+    $('.form-control.address').on(
+        {keyup: function(e){
+            const alert = $(this).siblings('.alert')
+            alert.html("<p></p>")
+        }
+    })
+    
+    const addressForm = document.getElementById('add-address-form');
+    addressForm.addEventListener('submit', userAddAddress);
+    
+    function userAddAddress(e){
+        e.preventDefault()
+        console.log('rrrrrrrrrr')
+        const Address = document.querySelector('#address')
+        const WithSpinner = Address.querySelector('.with-spinner')
+        WithSpinner.style.display = "block"
+                    
+        const user_authenticated = document.getElementById("authentication-status").value;
+        if (user_authenticated == 'True'){
+            console.log('444444444')
+            $.ajax({
+                type: $(this).attr('method'),
+                url: this.action,
+                data: $(this).serialize(),
+                success: function (response) {
+                    Address.style.display = 'none'
+                    WithSpinner.style.display = "none" 
+
+                    $('.lower-block > .first-box > .block2 > .all > .card2 > .dummyrow').css('display','flex')
+                    $('.lower-block > .first-box > .block2 > .all > .card2 > .dummyrow > .checkbox > .addressOption').attr('value','' + response.data.pk + '')
+                    card = $('.lower-block > .first-box > .block2 > .all > .card2 > .dummyrow > .checkbox').clone(true)
+                    $('.lower-block > .first-box > .block2 > .all > .card2 > .dummyrow').css('display','none')
+                    $('.block2 > .card-col > .other_card-col_container').append(
+                        `<div class="card single${response.data.pk}" data-index="${response.data.pk}"> \
+                            <div class="card-wrap"> \
+                                <div class="card-body"> \
+                                    <p class="card-text"><span>Fullname2: </span> <span>${response.data.full_name}</span></p> \
+                                    <p class="card-text"><span>Phone: </span> <span>${response.data.phone}</span></p> \
+                                    <p class="card-text"><span>Email:</span> <span class="email-text" data-index="${response.data.pk}">${response.data.email}</span></p> \
+                                    <p class="card-text"><span>Post code:</span> <span>${response.data.postal_code}</span></p> \
+                                    <p class="card-text"><span>Town/city:</span> <span>${response.data.city}</span></p> \
+                                    <p class="card-text"><span>Address 1:</span> <span>${response.data.address_line}</span></p> \
+                                </div> \
+                            </div> \
+                    </div>`)
+                    $('.block2 > .checkbox.dummy-sample > .addressOption').attr('value','' + response.data.pk + '')
+                    const clonedCheckbox = $('.block2 > .checkbox.dummy-sample').clone(true)
+                    clonedCheckbox.removeClass("dummy-sample").css('display',"block")
+                    const clonedEditIcon = $('.block2 > .pencil.dummy-sample').clone(true)
+                    clonedEditIcon.removeClass("dummy-sample").css('display', 'block').attr('value',`${response.data.pk}`)
+                    const clonedDeleteIcon = $('.block2 > .trash.dummy-sample').clone(true)
+                    clonedDeleteIcon.removeClass("dummy-sample").css('display', 'block').attr('value',`${response.data.pk}`)
+                    
+                    const iconWrapDiv = document.createElement('div')
+                    iconWrapDiv.className= 'icon-wrap'
+                    $(`.block2 > .card-col > .other_card-col_container > .card.single${response.data.pk}`).append(iconWrapDiv)
+                    $(`.block2 > .card-col > .other_card-col_container > .card.single${response.data.pk} > .icon-wrap`).append(clonedEditIcon)
+                    $(`.block2 > .card-col > .other_card-col_container > .card.single${response.data.pk} > .icon-wrap`).append(clonedDeleteIcon)
+                    $(`.block2 > .card-col > .other_card-col_container > .card.single${response.data.pk} > .card-wrap`).append(clonedCheckbox)
+                    alert('Your new address has been successfully added')
+                },
+                error: function(error, errmsg, err){
+                    console.log(error.responseJSON['msg'], "error.responseJSONerror.responseJSONerror.responseJSON")
+                    const {key, value} = error.responseJSON['msg']
+                    const InputRow = Address.querySelector(`.input-row.${key}`)
+                    InputRow.insertAdjacentHTML('afterbegin', `<p class="field-error">${value}</p>`)
+                    WithSpinner.style.display = "none" 
+                }
+            });
+        }
+        else if (user_authenticated == 'False'){
+            $('.login').css('display','grid')
+            document.querySelector('.hiddennInputForProductFrame').value = 'true'
+            $('.product-frame').css('display','none')
+            WithSpinner.style.display = "none" 
+        }
+    }
+
+    $('#add-address-form > .input-row > .form-input').on(
+        {keydown: function(e){
+            $('#add-address-form > .input-row > .field-error').remove()
+        }
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,358 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% block stylesheet1 %}{% static 'styles/account/address_form.css' %}{% endblock %}
+{% block stylesheet2 %}{% static 'styles/account/registrations.css' %}{% endblock %}
+{% block stylesheet3 %}{% static 'styles/cart/cart.css' %}{% endblock %}
+{% block stylesheet4 %}{% static 'styles/checkout/checkout.css' %}{% endblock %}
+{% block stylesheet5 %}{% static 'styles/core/footer.css' %}{% endblock %}
+{% block stylesheet6 %}{% static 'styles/core/frontpage.css' %}{% endblock %}
+{% block stylesheet7 %}{% static 'styles/core/header-popup.css' %}{% endblock %}
+{% block stylesheet8 %}{% static 'styles/core/image-slideshow.css' %}{% endblock %}
+{% block stylesheet9 %}{% static 'styles/core/loading-icon.css' %}{% endblock %}
+{% block stylesheet10 %}{% static 'styles/core/modal.css' %}{% endblock %}
+{% block stylesheet11 %}{% static 'styles/core/with-spinner.css' %}{% endblock %}
+{% block stylesheet12 %}{% static 'styles/order/delivery-address-detail.css' %}{% endblock %}
+{% block stylesheet13 %}{% static 'styles/vendor/option-choice.css' %}{% endblock %}
+{% block stylesheet14 %}{% static 'styles/vendor/vendor-item.css' %}{% endblock %}
+{% block stylesheet15 %}{% static 'styles/product/product-frame.css' %}{% endblock %}
+{% block stylesheet16 %}{% static 'styles/core/nav/side-nav.css' %}{% endblock %}
+{% block stylesheet17 %}{% static 'styles/core/nav/header.css' %}{% endblock %}
+{% block stylesheet18 %}{% static 'styles/core/site-logo.css' %}{% endblock %}
+
+
+{% block title %}A Restaurant Site{% if request.user.is_authenticated %} to {{ request.user.user_name }}{% endif %}{% endblock %}
+
+
+
+{% block content %}
+<div class="homepage">
+    
+    <div class="homepage-top-layout">
+        <div class="inner-block">
+            {% comment %} 
+            {% include './image-slideshow.html' %} 
+            {% endcomment %}
+            <div class="site-intro-wrap">
+                <div class="site-intro">
+                    <h1 class="place1" style="font-weight:bold">Excite</h1>
+                    <h1 class="place2">Your&nbsp;taste&nbsp;bud</h1>
+                    <h3 class="place3">WITH&nbsp;TASTY&nbsp;9JA DISHES <i class="fa fa-cutlery"></i></h3>
+                    <h4 class="place4"><span class="">Nourishing</span><i class="fa fa-cutlery"></i></h4>
+                    <h4 class="place4"><span class="">Exciting</span><i class="fa fa-cutlery"></i></h4>
+                    <h4 class="place4"><span class="">Well Prepared</span><i class="fa fa-cutlery"></i></h4>
+                    <h4 class="place4"><span class="">Finger-licking</span><i class="fa fa-cutlery"></i></h4>
+                </div>
+            </div>
+
+        </div>
+        <i style="height: 60px;width: 60px;
+            justify-items: center; align-items: center;
+            display: grid;background:var(--default);
+            position:absolute;bottom:-30px;
+            border-radius:100%;left:48%;font-size:30px;
+            border: 10px solid var(--white);
+            color: var(--gray);" 
+            class="fa fa-caret-down dimacator">
+        </i>
+
+    </div>
+    <div class="homepage-btm-layout">
+        <div class="homepage-btm-wrap">
+            {% for vendor in all_vendor %}
+            {% if vendor.vendors_products.all %}
+            <div class='vendor-block' data-vendorID="{{vendor.id}}">
+                <div class="board show-on-scroll">
+                    <div class="wrap">
+                        {% for i in vendor.vendors_products.all|slice:":5" %}
+                        <span class="board-img img-1">
+                            <span data-index="img-1" class="text">{{ i.category }} Food</span>
+                            <img src="{{ i.images.url }}" alt="food-image">
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="food-display">
+                    {% for i in vendor.vendors_products.all|slice:":5" %}
+                    <div class="food-card show-on-scroll">
+                        <div class="content">
+                            <div class="left">
+                                <span>{{ i.title }}</span>
+                                <span>${{ i.price }}</span>
+                                <span>{{ i.description }}</span>
+                            </div>
+                            <div class="right">
+                                <img src="{{ i.images.url }}" alt="food-image">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="reservation show-on-scroll">
+                    <div class="box">
+                        <img style="width:150px;height:100%;object-fit:cover;" src="media/images/site_images/chef3.jpeg">
+                        <div class="reservation-content">
+                            <h1 class="">{{ vendor.store_name }} Store</h1>
+                            <div class="block">
+                                <h2>
+                                    Order for nice {{ vendor.store_name }} meals you cant resist
+                                </h2>
+                                <div class="btn-place">
+                                    <button>Reservation</button>
+                                    <button class="vendor-pop-up keepMoving-jump-icon" data-vendorID="{{vendor.id}}" data-storeName="{{vendor.store_name}}">order meal</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div>
+            {% endif %}
+            {% endfor %}
+
+
+            {% if messages %}
+            <div id="pop-notification" class="alert alert-success">
+                <div class="alert alert-success">
+                    PUT YOUR MESSAGE HERE
+                </div>
+            </div>
+            {% endif %}
+            
+            {% include 'core/modal.html' %}
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script data-userauthentication="{{user.is_authenticated}}" data-mydeliveryopt = '{{mydeliveryopt}}' data-mydeliveryadd = '{{mydeliveryadd}}'>
+    
+    const headerPopUp = document.querySelector('.header-popUp')
+    const main = document.querySelector('.header-popUp > .content > .main')
+    const main2 = document.querySelector('.header-popUp > .content > .main2')
+    const contact = document.querySelector('.header-popUp > .content > .main > .wrap > .contact')
+    const about = document.querySelector('.header-popUp > .content > .main > .wrap > .about')
+    const sectionContainer = document.querySelector('#section-container')
+    const place2 = document.querySelector('nav > .place2')
+    
+    var modal = document.getElementById("myModal");
+    var addressform = document.getElementById("address");
+    var option_choice = document.getElementsByClassName("option-choice")[0];
+    var productFrame = document.getElementsByClassName("product-frame")[0];
+    var loginForm = document.getElementsByClassName("login")[0];
+    var signupForm = document.getElementsByClassName("signUp")[0];
+    var registeration = document.getElementsByClassName("registration")[0];
+    {% comment %} let slideIndex = 1
+    showSlides(slideIndex)
+    function plusSlides(n){
+        showSlides(slideIndex += n)
+    }
+    function currentSlide(n){
+        showSlides(slideIndex = n)
+    }
+    function showSlides(n){
+        let i;
+        let slides = document.getElementsByClassName("slide");
+        let dots = document.getElementsByClassName("dots");
+        if (n > slides.length){slideIndex = 1}
+        if (n < 1){slideIndex = slides.length}
+        for (i = 0; i<slideIndex.length; i++){
+            slideIndex[i].style.display = 'none'
+        }
+        for (i = 0; i<dots.length; i++){
+            dots[i].className = dots[i].className.replace("active", "")
+        }
+         
+        slides[slideIndex-1].style.display = "block"
+        dots[slideIndex-1].className += "active"
+    } {% endcomment %}
+
+
+
+    {% comment %} const delay = 5000;
+    const images= ['img-1', 'img-4', 'img-3']
+    const [index, setIndex] = React.useState(0);
+    const timeoutRef = React.useRef(null);
+    function resetTimeout() {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      }
+      
+    useEffect(() => {
+        resetTimeout();
+        timeoutRef.current = setTimeout(
+          () =>
+            setIndex((prevIndex) =>
+              prevIndex === images.length - 1 ? 0 : prevIndex + 1
+            ),
+          delay
+        );
+    
+        return () => {
+            resetTimeout();
+        };
+      }, [index]); {% endcomment %}
+
+
+    const scroll = window.requestAnimationFrame || function(callback){
+        window.setTimeout(callback,
+        1000/60)
+    };
+
+    const elementToShow = document.querySelectorAll('.show-on-scroll')
+    function loop(){
+        elementToShow.forEach(function(element){
+            if (isElementInViewport(element)){
+                element.classList.add('is-visible')
+            } else {
+                element.classList.remove('is-visible')
+            }
+        });
+        scroll(loop);
+    }
+    loop()
+
+    function isElementInViewport(el){
+        if (typeof jQuery === "function" && el instanceof jQuery){
+            el = el[0];
+        }
+        var rect= el.getBoundingClientRect();
+        return (
+            (rect.top <= 0 && rect.bottom >= 0)
+            ||
+            (rect.bottom >= (window.innerHeight || document
+                .documentElement.clientHeight) && 
+            rect.top <= (window.innerHeight || document
+                .documentElement.clientHeight))
+            ||
+            (rect.top >= 0 && 
+                rect.bottom <= (window.innerHeight || document
+                .documentElement.clientHeight))
+
+        )
+    }
+
+    $('.board-img > img').on({
+        mouseenter: function(){
+            const index = this.parentElement.className.split(' ')[1]
+            const boardText = this.previousElementSibling
+            this.style.opacity= '1'
+            this.style.transform= 'translateY(-4em)'
+            this.style.transition= 'transform 4s .25s cubic-bezier(0,1,.3,1), \
+                                   opacity .3s .25s ease-out'
+            this.style.willChange= 'transform'
+
+            boardText.style.opacity= '1'
+            boardText.style.transform= 'translateY(2em)'
+            boardText.style.transition= 'transform 1s .25s cubic-bezier(0,1,.3,1), \
+                                   opacity .3s .25s ease-out'
+            boardText.style.willChange= 'transform'
+        },
+        mouseleave: function(){
+            const boardText = this.previousElementSibling
+            this.style.transform= 'translateY(0)'
+            boardText.style.transform= 'translateY(0)'
+                
+        }
+    });
+
+    $('.vendor-pop-up').on({
+        click: function(e){
+            var id =$(this).attr('data-vendorID');
+            var store_name =$(this).attr('data-storeName');
+            $('.product-frame > .line1 > .head-1').text(store_name + ' Store').css('color','var(--gray)')
+            $('.vendor-pop-up').removeClass('active')
+            $(this).addClass('active')
+            modal.style.display = "flex";
+            productFrame.style.display = "flex";
+            document.querySelector('.modal-icon:first-child').querySelector('i').style.color= 'var(--black)'
+            $('.modal-icon:nth-child(2) > i').css("color", 'var(--gray)')
+            $('.modal-icon:nth-child(2) > i').css("border", '2px solid var(--gray)')
+            document.querySelector('.modal-icon:last-child').querySelector('i').style.color= 'var(--gray)'
+            document.querySelector('.modal-icon:last-child').querySelector('.qty').style.background= 'var(--gray)'
+            $('.option-choice[data-index="dummy"]').css('display','none')
+
+            $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/restaurant.jpg')
+            $('.product-frame > .body > .bottom > .product-items > .product-block').remove()
+            $('.product-frame > .body > .bottom > .delivery-address-details').css('display','none')
+            $('.product-frame > .body > .bottom > .cart-items').css('display','none')
+            $('.product-frame > .body > .bottom > .product-items').css('display','flex')
+            $('.product-frame > .line1 > .head-1').text(store_name + ' Store').css('color','var(--gray)')
+            
+            const LoadingIcon = $('.product-frame > .body > .bottom > .product-items > .loading-icon')
+            const img = $('.product-frame > .body > .bottom > .product-items > .loading-icon > img.icon')
+            const info = $('.product-frame > .body > .bottom > .product-items > .loading-icon > .info')
+            LoadingIcon.addClass('keepmoving-icon').css('display', "flex")
+            img.css('display', "block")
+            info.css('display',"none")
+
+            const buttons = $('.product-frame > .body > .top.head-pic > .line-2 > .vendor-header > button')
+            buttons.attr('style', 'border-bottom:none;')
+            $('.product-frame > .body > .top.head-pic > .line-2 > .vendor-header > button:nth-child(1)')
+            .attr('style', 'border-bottom:2px solid var(--red);')
+
+            const ItemCount = $('.product-frame > .body > .bottom > .product-items > .item-count')
+            ItemCount.css('display', 'none')
+            $.ajax({
+                type:"POST",
+                url:" {% url 'product_:all_product' %}",
+                data: {
+                    id: id,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    action: 'post'
+                },
+                success: function(json){
+                    LoadingIcon.css('display',"none")
+                    VendorProductDisplay(json.place.table, null)
+                },
+                error: function(xhr, errmsg, err){
+                    info.text('something is wrong with your internet').css('display',"block")
+                    LoadingIcon.removeClass('keepmoving-icon')
+                    console.log('completed with error');
+                }
+            })
+        }
+    })
+
+    const VendorProductDisplay = (product, btn) => {
+        const ItemCount = $('.product-frame > .body > .bottom > .product-items > .item-count')
+        ItemCount.text(`(${product.length}) item`)
+        ItemCount.css('display', 'block')
+        
+        const ProductItems = document.querySelector('.product-frame > .body > .bottom > .product-items')
+        const ProductBlock = document.createElement('div')
+        ProductBlock.className = "product-block"
+        $(product).each(function(index, values){
+            const ProductCard = document.createElement('div')
+            ProductCard.className = 'product-card'
+            ProductCard.setAttribute('data-index', '' + values.pk + '')
+            ProductCard.innerHTML = '<div class="left"> \
+                <h1>' + values.fields.title + '</h1> \
+                <div class="block">  \
+                    <div class="row-1"> \
+                        <h2 class="ingredients">' + values.fields.ingredient + '</h2> \
+                        <span class="price">$' + values.fields.price + '</span> \
+                    </div> \
+                    <span class="description">' + values.fields.description + '</span> \
+                    <!-- <i class="fa fa-caret-left"> --> </i> \
+                </div> \
+            </div> \
+            <div class="right"> \
+                <img src="/media/' + values.fields.images + '" alt="an-image"> \
+            </div>'
+            ProductBlock.insertAdjacentElement('beforeend', ProductCard)
+         })
+         ProductItems.insertAdjacentElement('beforeend', ProductBlock)
+    }
+    
+
+    sectionContainer.onmouseenter = function(event){
+        headerPopUp.style.display = "none"
+        $('li.header-link').removeClass('active')
+        $('.fa-caret-down').css('color', 'var(--gray)')
+    }
+</script>
+{% endblock %}

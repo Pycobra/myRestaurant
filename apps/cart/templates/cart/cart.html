@@ -1,0 +1,163 @@
+{% comment %} {% load static %}
+{% block stylesheet3 %}{% static 'styles/cart/cart.css' %}{% endblock %} {% endcomment %}
+
+  <section class="cart-items">
+        <!-- <h1 class="main-head">Your Cart</h1> -->
+        <div class="box">
+            <div class="inside-box">
+                {% with data="you are not logged in" %}
+                    {% include 'core/loading-icon.html' %}
+                {% endwith %}
+                <div class="body-row">
+                    <div data-index="{{ i.id }}" class="cart-item-dummy" style="display:none;">
+                        <div class="first-block">
+                            <div class="block1">
+                                <img class="" alt="cart image">
+                            </div>
+                            <span style="border-right:2px solid var(--lightgrey);height:100%;"></span>
+                            <div class="block2">
+                                <div class="innerblock">
+                                    <div class="first-line">
+                                        <div class="block-1">
+                                            <span class="title" href=""></span>
+                                        </div>
+                                        <div class="block-2">
+                                            <div class="icons">
+                                                <button value="{{ i.id }}" data-index="{{ i.id }}" class="subtract-qty" type="button">
+                                                    <i style="color:#CCCDC6;" class="fa fa-minus"></i>
+                                                </button>
+                                                <div class="numbers">
+                                                    <span data-index="{{ i.id }}" class="item-qty"></span>
+                                                    <span data-index="{{ i.id }}" class="items-total"></span>
+                                                </div>
+                                                <button value="{{ i.id }}" data-index="{{ i.id }}" class="add-to-qty" type="button">
+                                                    <i class="fa fa-plus-circle"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="second-line">
+                                        <button value="{{ i.id }}" data-index="{{ i.id }}" class="delete-item" type="button">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                {% include 'checkout/checkout.html' %}
+            </div>
+        </div>
+
+</section>
+
+{% block scripts %}
+<script>
+
+    $('.add-to-qty').on(
+        {click: function(e){
+            e.preventDefault();
+            var prod_id=$(this).data('index');
+            $.ajax({
+                type:"POST",
+                url:"{% url 'cart_:cart_detail' %}",
+                data: {
+                    productID: prod_id,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    mainAction: 'post',
+                    subAction: 'update'
+                },
+                success: function(json){
+                    $(".close:nth-child(3) > a > .cart-place > .qty").text(json.cart_length);
+                    $('.cart-item-block > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .item-qty[data-index="' + prod_id + '"]').text(json.item_quantity)
+                    $('.cart-item-block > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .items-total[data-index="' + prod_id + '"]').text(json.item_total_cost)
+
+                    $('.total-qty').text(json.cart_length);
+                    $('.total-cost').text('N' + json.sub_total);
+                    $('#final-total').text('N' + json.get_total_cost);
+                },
+                error: function(xhr, errmsg, err){
+                    console.log('completed with error');
+                }
+            });
+        }}
+    )
+
+    $('.subtract-qty').on(
+        {click: function(e){
+            e.preventDefault();
+            var prod_id=$(this).data('index');
+            $.ajax({
+                type:"POST",
+                url:"{% url 'cart_:cart_detail' %}",
+                data: {
+                    productID: $(this).data('index'),
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    mainAction: 'post',
+                    subAction: 'subtract'
+                },
+                success: function(json){
+                    console.log(json.item_total_cost, "lolpolo")
+                    $(".modal-icon:nth-child(3) > a > .cart-place > .qty").text(json.cart_length);
+                    $('.cart-item-block > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .item-qty[data-index="' + prod_id + '"]').text(json.item_quantity)
+                    $('.cart-item-block > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .items-total[data-index="' + prod_id + '"]').text(json.item_total_cost)
+
+                    $('.total-qty').text(json.cart_length);
+                    $('.total-cost').text('$' + json.sub_total);
+                    $('#final-total').text('$' + json.get_total_cost);
+                    
+                    if (!json.item_quantity){
+                        $(`.inside-box > .body-row > .cart-item-block[data-index=${prod_id}]`).remove()
+                    }
+                    if (!json.cart_length){
+                        console.log(json.item_quantity, 'item_quantity item_quantity item_quantity')
+                        $(`.inside-box > .checkout`).css('display','none')
+                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row').css('display','none')
+                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box').append('<p>You dont have any product in your cart</p>')
+                    }
+                },
+                error: function(xhr, errmsg, err){
+                    console.log('completed with error');
+                }
+            });
+
+        }}
+    )
+
+    $('.delete-item').on(
+        {click: function(e){
+            e.preventDefault();
+            var prod_id=$(this).data('index');
+            $.ajax({
+                type:"POST",
+                url:"{% url 'cart_:cart_detail' %}",
+                data: {
+                    productID: $(this).data('index'),
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    mainAction: 'post',
+                    subAction: 'delete'
+                },
+                success: function(json){
+                    $(".close:nth-child(3) > a > .cart-place > .qty").text(json.cart_length);
+                    $('.total-qty').text(json.cart_length);
+                    $('.total-cost').text('$' + json.sub_total);
+                    $('#final-total').text('$' + json.get_total_cost);
+                    $('.cart-item-block[data-index="'+ prod_id +'"]').remove();
+
+                    if (json.cart_length == 0){
+                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box').html('<p>You dont have any product in your cart</p>')
+                    }
+                },
+                error: function(xhr, errmsg, err){
+                    console.log('completed with error');
+                }
+            });
+
+        }}
+    )
+
+</script>
+{% endblock %}

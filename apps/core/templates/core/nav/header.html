@@ -1,0 +1,198 @@
+
+<header>
+    <section class="section-nav">
+        <nav class="container-fluid">
+            {% include '../site-logo.html' %} 
+            <div class="place2">
+                <ul class="links">
+                    <li class="header-link home">
+                        <span class="link-text" style="margin-right:10px;">Home</span> 
+                        <span class="link-btm"></span>
+                    </li>
+                    <li class="header-link about" >
+                        <div class="link-text"><span style="margin-right:10px;">About</span><i class="fa fa-caret-down"></i></div> 
+                        <span class="link-btm"></span>
+                    </li>
+                    <li class="header-link recipe-cat">
+                        <div>
+                            <div class="link-text"><span style="margin-right:10px;">Recipe</span><i class="fa fa-caret-down"></i></div> 
+                            <span class="link-btm"></span>
+                        </div>
+                    </li>
+                    <li class="header-link contact">
+                        <div class="link-text"><span style="margin-right:10px;">Contact</span><i class="fa fa-caret-down"></i></div> 
+                        <span class="link-btm"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="side-nav-icon">
+                <i class="fa fa-navicon" style="font-size:30px;color:var(--gray);"></i>
+                <i class="fa fa-plus" style="transform: rotate(45deg);font-size:30px;color:var(--gray);display:none;"></i>
+            </div>
+        </nav>
+        <div class="auth-header-btn">
+            {% if request.user.is_authenticated %} 
+                <button class="auth-signout">
+                    {% with data="registeration" %}
+                      {% include 'core/with-spinner.html' %}
+                    {% endwith %}
+                    Logout
+                </button>
+            {% else %}
+                <button class="auth-signin">Signin</button>
+            {% endif%}
+        </div>
+    </section>
+</header>
+<script>
+    
+    $(document).on(
+        'click', '.auth-signin', function(e){
+            loginForm.style.display = "grid";
+            modal.style.display = "flex";
+        }
+    )  
+    $(document).on(
+        'click', '.auth-signout',  function(e){
+            const WithSpinner = this.querySelector('.with-spinner')
+            WithSpinner.style.display = "block"
+            $.ajax({
+                type:"POST",
+                url:"{% url 'account_:logout' %}",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                success: function(json){
+                    $('.auth-signout').remove()
+                    const span = document.createElement('button')
+                    span.textContent = 'Signin'
+                    span.className = 'auth-signin'
+                    var authplace = document.querySelector('.auth-header-btn')
+                    authplace.insertAdjacentElement('afterbegin', span)
+                    
+                    WithSpinner.style.display = "none" 
+                },
+                error: function(xhr, errmsg, err){
+                    alert(err)
+                }
+            });
+        }
+    ) 
+    
+    $('.side-nav-icon > .fa-navicon').on({
+        mouseenter: function(){
+            $(this).toggle()
+            $('.side-nav-icon > .fa-plus').toggle()
+            $('.side-nav').toggleClass('pull-out')
+        }
+    })
+    $('.side-nav-icon > .fa-plus').on({
+        mouseenter: function(){
+            $(this).toggle()
+            $('.side-nav-icon > .fa-navicon').toggle()
+            $('.side-nav').removeClass('pull-out')
+            $('.side-nav').addClass('pull-in')
+        }
+    })
+    
+    const PopItUp = (elem, nodee, type) => {
+        headerPopUp.style.left = `${15.3}vw`
+        const sectionTop = sectionContainer.offsetTop
+        headerPopUp.style.top = `${sectionTop}px`
+        
+        headerPopUp.style.display = "none"; 
+        $('li.header-link').removeClass('active')
+        $('.fa-caret-down').css('color', 'var(--gray)')
+        elem.addClass('active') 
+        nodee.querySelector('i') ? 
+            nodee.querySelector('i').style.color = '#ffd78f'
+            : null
+        if (elem.hasClass('home')) {
+            headerPopUp.style.display = "none"; 
+            $('.recipe1').slideUp(500) 
+        }
+        if (elem.hasClass('about') || elem.hasClass('contact')) {
+            $('.recipe1').slideUp(500) 
+            main.style.display = "grid";
+            main2.style.display = "none";
+            if (elem.hasClass('about')){
+                about.style.display = "flex"; 
+                contact.style.display = "none"; 
+            }
+            if (elem.hasClass('contact')){
+                about.style.display = "none"; 
+                contact.style.display = "block"; 
+            }
+            headerPopUp.style.display = "grid"; 
+        }
+        if (elem.hasClass('recipe-cat') && type==="side-nav") {
+            $('.side-nav-wrap > li').css('border-bottom','2px solid  var(--white)')
+            elem.css('border-bottom','#ffd78f')
+            $('ul.recipe2').css('position','unset')
+            $('ul.recipe2').slideToggle(500)
+            $('.recipe1').slideUp(500) 
+        } 
+        else if (elem.hasClass('recipe-cat') && type==="header-nav") {
+            if (!document.querySelector('.recipe1')){
+                const ulElement = document.createElement('ul')
+                ulElement.className = "recipe recipe1"
+                const itemTop = nodee.offsetTop
+                const itemleft = nodee.offsetLeft
+                const itemHeight = nodee.clientHeight
+                ulElement.style.top = `${itemTop + itemHeight + 20}px`
+                ulElement.style.left = `${itemleft + 40}px`
+
+                const list = ['Okra Recipe', 'Ofe Onugbu Recipe', 'Spaghetti Recipe', 'Jellof Rice Recipe']
+                list.map(txt => {
+                    const liElement = document.createElement('li')
+                    liElement.textContent = txt
+                    ulElement.insertAdjacentElement('beforeend', liElement)
+                }) 
+                document.querySelector('main').insertAdjacentElement('afterbegin', ulElement)
+            }
+            $('.recipe1').slideDown(500) 
+        }
+    }
+    $('.side-nav-wrap > li').on({
+        click: function(){
+            PopItUp($(this), this, "side-nav")
+        }
+    })
+    $('li.header-link').on({
+        mouseenter: function(){
+            PopItUp($(this), this, "header-nav")
+        }
+    })
+
+    $(document).on(
+        'click', '.recipe > li', function(e){
+            headerPopUp.style.display = "none"; 
+            if (this.textContent === "Okra Recipe"){
+                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/ogbono.png')
+            }
+            if (this.textContent === "Ofe Onugbu Recipe"){
+                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/gbegiri&ewedu.png')
+            }
+            if (this.textContent === "Spaghetti Recipe"){
+                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/indomie.png')
+            }
+            if (this.textContent === "Jellof Rice Recipe"){
+                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/jellof.png')
+            }
+            main.style.display = "none";
+            main2.style.display = "flex";
+            headerPopUp.style.display = "grid"; 
+            $('.recipe').slideUp(500)
+        }
+    ) 
+
+    $(document).on(
+        'mouseleave', '.recipe1', function(e){
+            $('.recipe1').slideUp(500)
+        }
+    ) 
+
+
+
+
+</script>

@@ -1,0 +1,78 @@
+{% load static %}
+<!--fa-bars
+fa-times
+fa-times-rectangle
+fa-times-rectangle-o
+fa-arrow-up
+fa-arrow-down-->
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} MultiVendorSite {% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'styles/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/main.css' %}">
+    <link rel="stylesheet" href="{% block stylesheet1 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet2 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet3 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet4 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet5 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet6 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet7 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet8 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet9 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet10 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet11 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet12 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet13 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet14 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet15 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet16 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet17 %}{% endblock %}">
+    <link rel="stylesheet" href="{% block stylesheet18 %}{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+    <script type="text/javascript" language="JavaScript" src="{% static 'scripts/jQuery-3.2.1.min.js' %}"></script>
+
+</head>
+<body>
+    <main>
+        {% include './header-popup.html' %}
+        <div class="fixed-img">
+            <img src="media/images/site_images/chef.jpg">
+        </div>
+        {% include './nav/side-nav.html' %} 
+        {% include './nav/header.html' %} 
+        <section id="section-container">
+            <div id="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </section>
+    </main>
+
+    {% include './footer.html' %} 
+
+    {% block scripts %}
+    <script>
+
+        {% comment %} const person1 = {"NAME":"MAX"}
+        const person2 = {"NAME":"TREDES"}
+        const personData = new Map([[person1, [{"SEX":"MALE", "Age":12}]]])
+        personData.set(person2, [{"SEX":"FEMALE", "Age":15}])
+        console.log(personData, "y y y y y ")
+        console.log(personData.get(person2), "y y y y y ") {% endcomment %}
+    </script>
+    {% endblock %}
+</body>
+</html>
+
+<!--CCCDC6 BBBCB6 ACADA8 746D69-->
+

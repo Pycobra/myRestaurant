@@ -1,0 +1,138 @@
+{% comment %} {% load static %}
+{% block stylesheet2 %}{% static 'styles/account/registrations.css' %}{% endblock %} {% endcomment %}
+
+<div class="login registration">
+  <div class="form-inside">
+      <h1 class="head">Log in</h1>
+      <form id="account-login-form" action="{% url "account_:login" %}" method="post">
+            {% csrf_token %}
+            <div class="input-row {{loginForm.email_as_username.name}}">
+              {{ loginForm.email_as_username}}
+            </div>
+            <div class="input-row {{loginForm.password.name}}">
+              {{ loginForm.password}}
+            </div>
+            <div class="btn-wrap"> 
+              {% with data="registeration" %}
+                {% include 'core/with-spinner.html' %}
+              {% endwith %}
+                <button type="submit">Sign in</button>
+            </div>
+      </form>
+      <span class="icon2"><span>OR</span></span>
+      <div class="floor">
+          <span class="main">Don't have an account? <span class="in">Sign in</span></span>
+          <span>Forgotten password?</span>
+      </div>
+  </div>
+  <input type="hidden" id="authentication-status" value="{{user.is_authenticated}}"/>
+</div>
+
+
+
+{% block scripts %}
+<script data-userauthentication="{{user.is_authenticated}}">
+    $('.login > .form-inside > .floor > .main').on(
+        {click: function(e){
+            e.preventDefault();
+            $('.login').css('display', 'none');
+            $('.signUp').css('display', 'grid');
+
+        }
+    })
+
+    const userLogin = document.getElementById('account-login-form')
+    userLogin.addEventListener('submit', userLoginForm)
+    function userLoginForm(e){ 
+        e.preventDefault()
+        const Login = document.querySelector('.login')
+        const HiddenInputForProductFrame = document.querySelector('.hiddennInputForProductFrame')
+        const ProductFrame = document.querySelector('.product-frame')
+        const WithSpinner = Login.querySelector('.with-spinner') 
+        WithSpinner.style.display = "block"
+        const user_authenticated = document.getElementById("authentication-status");
+        modalIcon_deliveryAndAddress = document.querySelector('.modal-icon:nth-child(2).active')
+        modalIcon_checkout = document.querySelector('.modal-icon:last-child.active')
+        $.ajax({
+            type: $(this).attr('method'),
+            url: this.action,
+            data: $(this).serialize(),
+            success: function (response) {
+                user_authenticated.setAttribute('value', 'True')
+                Login.style.display = 'none'
+                
+                $('.auth-signin').remove()
+                $('.auth-sidenav-signin').remove()
+                
+                var authplace = document.querySelector('.auth-header-btn')
+                authplace.insertAdjacentHTML('afterbegin', 
+                '<button class="auth-signout"> \
+                    <div class="with-spinner"> \
+                        <span class="spinner-overlay"> \
+                            <span class="spinner-container"></span> \
+                        </span> \
+                      </div> \
+                    Logout \
+                </button>')
+                
+                var authplace = document.querySelector('.auth-sidenav-btn')
+                authplace.insertAdjacentHTML('afterbegin', 
+                '<button class="auth-sidenav-signout"> \
+                    <div class="with-spinner"> \
+                        <span class="spinner-overlay"> \
+                            <span class="spinner-container"></span> \
+                        </span> \
+                      </div> \
+                    Logout \
+                </button>')
+                
+                sectionContainer.insertAdjacentHTML('afterbegin', 
+                `<div class="alert-popup"> \
+                    <div><i class="fa fa-info"></i></div> \
+                    <div><span>${response.msg.value}</span></div> \
+                </div>`)
+
+                if (HiddenInputForProductFrame.value === 'true'){
+                    HiddenInputForProductFrame.value = 'false'
+                    ProductFrame.style.display = 'flex'
+                } 
+                else modal.style.display = "none"
+
+                if (modalIcon_deliveryAndAddress){
+                    createDeliveryAndAddress(modalIcon_deliveryAndAddress, true)
+                }
+                else if (modalIcon_checkout){
+                    null
+                    {% comment %} document.getElementById('paymentForm').submit() {% endcomment %}
+                    {% comment %} createCartContent(modalIcon_checkout) {% endcomment %}
+                }
+                WithSpinner.style.display = "none" 
+            },
+            error: function(error, errmsg, err){
+                console.log(error.responseJSON['msg'], "msg msg msg")
+                const {key, value} = error.responseJSON['msg']
+                if (key != "Successful" && key != "Failed"){
+                    console.log(key, value)
+                    const InputRow = Login.querySelector(`.input-row.${key}`)
+                    console.log(Login, "login login login")
+                    console.log(InputRow, "input input input")
+                    InputRow.insertAdjacentHTML('afterbegin', `<p class="field-error">${value}</p>`)
+                }
+                WithSpinner.style.display = "none" 
+            }
+        });
+    }
+    
+    $('#account-login-form > .input-row > .form-input').on(
+        {keydown: function(e){
+            $('#account-login-form > .input-row > .field-error').remove()
+        }
+    })
+
+
+</script>
+{% endblock %}
+
+
+
+

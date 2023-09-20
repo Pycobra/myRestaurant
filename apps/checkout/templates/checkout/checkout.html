@@ -1,0 +1,230 @@
+{% comment %} {% load static %}
+{% block stylesheet4 %}{% static 'styles/checkout/checkout.css' %}{% endblock %} {% endcomment %}
+
+<div class="checkout">
+    <div class="box">
+        
+        <h1 style="width:100%;font-size:17px;font-weight:600;padding-top:10px;text-align:center;">ORDER SUMMARY</h1>
+        <div class="block1">
+            <div class="unit-price">
+                <span>Total quantity</span><span class="total-qty">{{ cart|length }}</span>
+            </div>
+            <div class="discount">
+                <span>Total Price</span><span class="total-cost">N{{cart.get_subtotal_cost}}</span>
+            </div>
+            <div class="discount">
+                <span>Estimated Tax</span><span>0</span>
+            </div>
+            <div class="unit-total">
+                <span>Delivery Fee</span><span id="delivery-amt">{{cart.get_delivery_price}}</span>
+            </div>
+            <div class="total">
+                <span>FINAL TOTAL</span><span id="final-total">N{{ cart.get_total_cost }}</span>
+            </div>
+        </div>
+        <div class="form-button">
+            {% for payment in paymentOptions %}
+                {% if payment.name == "FlutterWave" %}
+                <form data-paymentID="{{payment.id}}" id="flutterwavePaymentForm">  
+                    <button data-paymentID="{{payment.id}}" type="submit" class="flutterwave">
+                        <img style="height:20px;object-fit:cover;" src="media/images/flutterwave/flutterwave.png">    
+                    </button> 
+                </form>
+                {% elif payment.name == "Paystack" %}
+                <form data-paymentID="{{payment.id}}" id="paystackPaymentForm">   
+                    <button data-paymentID="{{payment.id}}" type="submit" class="paystack">
+                        <img style="width:100px;height:25px;object-fit:cover;" src="media/images/paystack/paystack.png">    
+                    </button>
+                </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% block scripts %}
+<script data-email = "{{mydeliveryopt.email}}">
+    data1 = document.currentScript.dataset;
+    
+    var paystackPaymentForm = document.getElementById('paystackPaymentForm');
+    paystackPaymentForm.addEventListener('submit', payWithPaystack.bind(this), false);
+    function payWithPaystack(e){
+        e.preventDefault()
+        console.log("eeeeeeeeeeeee")
+        paymentID = e.target.dataset.paymentid
+        const user_authenticated = document.getElementById("authentication-status").value;
+        if (user_authenticated == 'True'){ 
+            console.log("eeeeeeettteeeeee")
+            $.ajax({
+                url: "{% url 'checkout_:user_details_authenticated' %}",
+                method: 'get',
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    action: 'paystack-payment',
+                    paymentID
+                },
+                success: function (response) {
+                    const {userHasdeliveryopt, userHasdeliveryadd, user_name, item, amt, key} = response
+                    if (userHasdeliveryopt && userHasdeliveryadd){
+                        const total_paid = amt + item.delivery[0].fields.delivery_price
+                        const amount = total_paid * 100
+                        var handler = PaystackPop.setup({
+                            key: key,
+                            email: item.address[0].fields.email,
+                            amount: amount,
+                            currency: 'NGN',
+                            ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+                            metadata: { 
+                                name: user_name, 
+                                phone: item.address[0].fields.phone 
+                            },
+                            callback: function(response) {
+                                ref = response.reference
+                                $.ajax({
+                                    url: "{% url 'checkout_:complete_payment' %}",
+                                    method: 'post',
+                                    data: {
+                                        ref: response.reference,
+                                        total_paid: total_paid,
+                                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                                        action: 'paystack-payment',
+                                    },
+                                    success: function (response) {
+                                    // the transaction status is in response.data.status
+                                    }
+                
+                                });
+                            },
+                            onClose: function() {
+                                alert('Transaction was not completed, window closed.');
+                            },
+                        });
+                        handler.openIframe();
+                    }
+                    else if (!userHasdeliveryopt && !userHasdeliveryadd){
+                        alert("you haven't chosen any delivery option & address qwertyuiop")
+                    }
+                    else if (!userHasdeliveryopt){
+                        alert("you haven't chosen any delivery option")
+                    }
+                    else if (!userHasdeliveryadd){
+                        alert("you have not chosen an address")
+                    }
+                },
+                error: function (error) {
+                    console.log(error, 'error response response')
+                }
+            });
+        }
+        else if (user_authenticated == 'False'){
+            $('.login').css('display','grid')
+            document.querySelector('.hiddennInputForProductFrame').value = 'true'
+            $('.product-frame').css('display','none')
+        }
+    }
+
+
+
+    var flutterwavePaymentForm = document.getElementById('flutterwavePaymentForm');
+    flutterwavePaymentForm.addEventListener('submit', payWithFlutterwave.bind(this), false);
+    {% comment %} function makePayment() { {% endcomment %}
+    function payWithFlutterwave() {
+        e.preventDefault()
+        paymentID = e.target.dataset.paymentid
+        const user_authenticated = document.getElementById("authentication-status").value;
+        if (user_authenticated == 'True'){ 
+            $.ajax({
+                url: "{% url 'checkout_:user_details_authenticated' %}",
+                method: 'get',
+                {% comment %} paymentID: {% endcomment %}
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    action: 'flutterwave-payment',
+                    paymentID
+                },
+                success: function (response) {
+                    const {userHasdeliveryopt, userHasdeliveryadd, amt, email, key} = response
+                    if (userHasdeliveryopt && userHasdeliveryadd){
+                        FlutterwaveCheckout({
+                            public_key: key,
+                            tx_ref: ''+Math.floor((Math.random() * 1000000000) + 1),    
+                            amount: amt * 100,
+                            currency: "NGN",
+                            {% comment %} paymentOptionID: "NGN", {% endcomment %}
+                            payment_options: "card, mobilemoneyghana, ussd",
+                            redirect_url:  "{% url 'checkout_:complete_payment' %}",
+                            meta: {
+                                consumer_id: 23,
+                                consumer_mac: "92a3-912ba-1192a",
+                            },
+                            customer: {
+                                email: email,
+                                phone_number: "08102909304",
+                                name: "Rose DeWitt Bukater",
+                            },
+                            customizations: {
+                                title: "Naija Cuisines",
+                                description: "Payment for meals",
+                                logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+                            },
+                        });
+                    }
+                    else if (!userHasdeliveryopt && !userHasdeliveryadd){
+                        alert("you haven't chosen any delivery option & address qwertyuiop")
+                    }
+                    else if (!userHasdeliveryopt){
+                        alert("you haven't chosen any delivery option")
+                    }
+                    else if (!userHasdeliveryadd){
+                        alert("you have not chosen an address")
+                    }
+                }
+
+            });
+        }
+        else if (user_authenticated == 'False'){
+            $('.login').css('display','flex')
+        }
+    }
+
+
+
+
+    {% comment %} function payWithFlutterwave() {
+        FlutterwaveCheckout({
+            public_key: "FLWPUBK_TEST-b7eb58ee9768abf02faebf8420d803b5-X",
+            tx_ref: "titanic-48981487343MDI0NzMx",
+            tx_ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+            amount: 54600,
+            currency: "NGN",
+            payment_options: "card, mobilemoneyghana, ussd",
+            redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+            meta: {
+                consumer_id: 23,
+                consumer_mac: "92a3-912ba-1192a",
+            },
+            customer: {
+                email: "rose@unsinkableship.com",
+                phone_number: "08102909304",
+                name: "Rose DeWitt Bukater",
+            },
+            customizations: {
+                title: "The Titanic Store",
+                description: "Payment for an awesome cruise",
+                logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+            },
+        });
+    } {% endcomment %}
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

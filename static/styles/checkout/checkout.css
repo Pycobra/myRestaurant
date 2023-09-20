@@ -1,0 +1,120 @@
+
+ .cart-items .checkout{
+    display: none;
+    /* flex-direction:column;
+    justify-content: center;
+    align-items: flex-end; */
+    margin:30px 0;
+    width:100%;
+}
+ .cart-items .checkout .box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width:98%; */
+    position:relative;
+    background-color:var(--white);
+    /* padding:5px; */
+    border-radius:5px;
+    box-shadow:3px 3px 3px 3px #CCCCCC;
+}
+.cart-items .checkout .box .block1 .total{
+    border-top: 1px solid #BBBCB6;
+    padding-top: 10px;
+}
+ .cart-items .checkout .box .block1{
+    display: flex;
+    flex-direction:column;
+    /* justify-content: space-between;
+    align-items: center; */
+    padding: 0 20px;
+    width:90%;
+    height:100%;
+    margin-top:5px;
+}
+ .cart-items .checkout .box .block1 .unit-price,
+ .cart-items .checkout .box .block1 .discount,
+ .cart-items .checkout .box .block1 .unit-total,
+ .cart-items .checkout .box .block1 .total{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width:90%;
+    font-size:14px;
+    margin:5px;
+}
+ .cart-items .checkout .box .block1 span:nth-child(2){
+    font-weight:550;
+    font-size:16px;
+}
+ .cart-items .checkout .box .block1 .unit-price{
+    padding-top: 12px;
+    border-top: 1px solid #BBBCB6;
+}
+ .cart-items .checkout .box .block1 .total{
+    margin-top:8px;
+}
+ .cart-items .checkout .box .block1 .total span:nth-child(1){
+    color:#746D69;
+    font-weight:600;
+}
+ .cart-items .checkout .box .block1 .total span:nth-child(2){
+    font-weight:600;
+    font-size:20px;
+    color:#746D69;
+}
+.checkout .form-button{
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    background: var(--bg_alert_and_notifications);
+    margin-bottom: 20px;
+    position: relative;
+    padding: 3%;
+    gap: 10px;
+}
+
+.checkout .form-button form {
+    display: grid;
+}
+.checkout .form-button .flutterwave, .checkout .form-button .paystack{
+    padding: 5px;
+    background: var(--light-gray);
+    border-radius: 5px;
+    border: 1px solid var(--orange);
+}
+
+.checkout .form-button .flutterwave:hover, .checkout .form-button .paystack:hover{
+    background: var(--white);
+    border: 1px solid #e7bea2;
+}
+
+
+
+@media screen and (max-width:600px){
+    .cart-items .checkout .box .block1 .unit-price,
+    .cart-items .checkout .box .block1 .discount,
+    .cart-items .checkout .box .block1 .unit-total,
+    .cart-items .checkout .box .block1 .total{
+       font-size:13px;
+   }
+   .cart-items .checkout .box .block1 span:nth-child(2){
+        font-size: 14px;
+    }
+    .cart-items .checkout .box .straight-line:last-child {
+        top:134px;
+    }
+    .cart-items .checkout .box .block1 .total span:nth-child(2) {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width:375px){
+    .checkout .form-button {
+        display: grid;
+        justify-content: unset;
+    }
+}
+
+
+

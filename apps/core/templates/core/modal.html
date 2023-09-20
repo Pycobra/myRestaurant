@@ -1,0 +1,43 @@
+{% comment %} {% load static %}
+{% block stylesheet10 %}{% static 'styles/core/modal.css' %}{% endblock %} {% endcomment %}
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <input class="hiddennInputForProductFrame" type="hidden" />
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        {% include 'account/registration/login.html' %}
+
+        {% include 'account/registration/signup.html' %}
+
+        {% include 'product/product-frame.html' %}
+    </div>
+
+</div>
+
+
+
+{% block scripts %}
+<script data-userauthentication="{{user.is_authenticated}}" data-mydeliveryopt = '{{mydeliveryopt}}' data-mydeliveryadd = '{{mydeliveryadd}}'>
+    
+
+    window.onclick = function(event) {
+      if (event.target == addressform) {
+        addressform.style.display = "none";
+      }
+      if (event.target == option_choice) {
+        $('.product-card > .left').css('background-color','var(--normalwhite)').css('padding','0').css('border-radius','0')
+        option_choice.style.display = "none";
+      }
+      else if (event.target == modal) {
+          modal.style.display = "none";
+          registeration.style.display = "none";
+          productFrame.style.display = "none";
+      }
+    }
+
+
+</script>
+{% endblock %}

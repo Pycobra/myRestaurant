@@ -1,0 +1,73 @@
+
+<div class="side-nav">
+    <ul class="side-nav-wrap links">
+        <li class="side-nav-link home">Home</li>
+        <li class="side-nav-link about">About</li>
+        <li class="side-nav-link recipe-cat" style="padding-right:10px;display:flex;flex-direction:column;">
+            <div class=""><span style="padding-right:5px;">Recipe</span><i class="fa fa-caret-down"></i></div>
+            <ul class="recipe recipe2">
+                <li>Okra Recipe</li>
+                <li>Ofe Onugbu Recipe</li>
+                <li>Spaghetti Recipe</li>
+                <li>Jellof Rice Recipe</li>
+            </ul>
+        </li>
+        <li class="side-nav-link contact">Contact</li>
+        <div class="auth-sidenav-btn">
+            {% if request.user.is_authenticated %} 
+                <button class="auth-sidenav-signout">
+                    {% with data="registeration" %}
+                      {% include 'core/with-spinner.html' %}
+                    {% endwith %}
+                    Logout
+                </button>
+            {% else %}
+                <button class="auth-sidenav-signin">Signin</button>
+            {% endif%}
+        </div>
+    </ul>
+</div>
+
+<script>
+    $(document).on(
+        'click', '.auth-sidenav-signin', function(e){
+            $('.side-nav-icon > .fa-plus').toggle()
+            $('.side-nav-icon > .fa-navicon').toggle()
+            $('.side-nav').removeClass('pull-out')
+            $('.side-nav').addClass('pull-in')
+            
+            loginForm.style.display = "grid";
+            modal.style.display = "flex";
+        }
+    ) 
+    $(document).on(
+        'click', '.auth-sidenav-signout', function(e){
+            const WithSpinner = this.querySelector('.with-spinner')
+            WithSpinner.style.display = "block"
+            $.ajax({
+                type:"POST",
+                url:"{% url 'account_:logout' %}",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                success: function(json){
+                    $('.auth-sidenav-signout').remove()
+                    const span2 = document.createElement('button')
+                    span2.textContent = 'Signin'
+                    span2.className = 'auth-sidenav-signin'
+                    var authplace = document.querySelector('.auth-sidenav-btn')
+                    authplace.insertAdjacentElement('afterbegin', span2)
+                    
+                    WithSpinner.style.display = "none" 
+                },
+                error: function(xhr, errmsg, err){
+                    alert(err)
+                }
+            });
+        }
+    )
+</script>
+
+
+
+

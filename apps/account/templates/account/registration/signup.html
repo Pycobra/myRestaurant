@@ -1,0 +1,88 @@
+`<div class="signUp registration">
+  <div class="form-inside">
+        <h1 class="head">Create account</h1>
+      <form id="account-register-form" action="{% url "account_:register" %}" method="POST">
+          {% csrf_token %}
+
+          <div class="input-row {{registerform.user_name.name}}">
+            {{ registerform.user_name}}
+          </div>
+          <div class="input-row {{registerform.email.name}}">
+            {{ registerform.email}}
+          </div>
+          <div class="input-row {{registerform.password.name}}">
+            {{ registerform.password}}
+          </div>
+          <div class="input-row {{registerform.password2.name}}">
+            {{ registerform.password2}}
+          </div>
+          <div class="btn-wrap"> 
+            {% with data="registeration" %}
+              {% include 'core/with-spinner.html' %}
+            {% endwith %}
+              <button type="submit">Sign Up</button>
+          </div>
+      </form>
+      <span class="icon2"><span>OR</span></span>
+      <div class="floor">
+          <span class="main">Already have an account? <span class="in">Log in</span></span>
+          <span>Forgotten password?</span>
+      </div>
+  </div>
+</div>
+
+
+{% block scripts %}
+<script>
+    const accountRegisterForm = document.getElementById('account-register-form');
+    accountRegisterForm.addEventListener('submit', registerNewUser);
+    function registerNewUser(e){
+        e.preventDefault()
+        const SignUp = document.querySelector('.signUp')
+        const WithSpinner = SignUp.querySelector('.with-spinner')
+        WithSpinner.style.display = "block"
+        modalIconMiddle_isActive = document.querySelector('.modal-icon:nth-child(2).active')
+        modalIconLast_isActive = document.querySelector('.modal-icon:last-child.active')
+        $.ajax({
+            type: $(this).attr('method'),
+            url: this.action,
+            data: $(this).serialize(),
+            success: function (response) {
+                {% comment %} user_authenticated.setAttribute('value', 'True') {% endcomment %}
+                SignUp.style.display = 'none'
+                if (modalIconMiddle_isActive){
+                    createDeliveryAndAddress(modalIconMiddle_isActive)
+                }
+                else if (modalIconLast_isActive){
+                    null
+                    {% comment %} document.getElementById('paymentForm').submit() {% endcomment %}
+                    {% comment %} createCartContent(modalIconLast_isActive) {% endcomment %}
+                }
+                WithSpinner.style.display = "none" 
+            },
+            error: function(error, errmsg, err){
+                console.log(error.responseJSON['msg'], "error.responseJSONerror.responseJSONerror.responseJSON")
+                const {key, value} = error.responseJSON['msg']
+                const InputRow = SignUp.querySelector(`.input-row.${key}`)
+                InputRow.insertAdjacentHTML('afterbegin', `<p class="field-error">${value}</p>`)
+                WithSpinner.style.display = "none" 
+            }
+        });
+    }
+    
+    $('#account-register-form > .input-row > .form-input').on(
+        {keydown: function(e){
+            $('#account-register-form > .input-row > .field-error').remove()
+        }
+    })
+    
+    $('.signUp > .form-inside > .floor > .main').on({
+        click: function(e){
+            e.preventDefault();
+            $('.signUp').css('display', 'none');
+            $('.login').css('display', 'grid');
+        }
+    })
+
+</script>
+{% endblock %}

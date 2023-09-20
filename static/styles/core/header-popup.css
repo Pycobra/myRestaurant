@@ -1,0 +1,105 @@
+
+.header-popUp{
+    display: none;
+    position: fixed;
+    padding: 5px;
+    background: var(--white);
+    width: 40%;
+    height: 62vh;
+    z-index: 3;
+    border: 4px solid var(--pale-gray);
+}
+.header-popUp .content{
+    display: grid;
+    border-radius: 20px 0 10px  20px ;
+}
+.header-popUp .content .main{
+    display:none;
+    justify-items:center;
+}
+
+.header-popUp .content .main .fa-coffee{
+    font-size: 350px;
+    color: var(--white);
+    position: relative;
+}
+.header-popUp .content .main .wrap{
+    position:absolute;
+    top:30%;
+    left:17%;
+    width:54%;
+    color:var(--gray);
+}
+.header-popUp .content .main .wrap .contact{
+    font-size:20px;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+}
+.header-popUp .content .main .wrap .contact .text{
+    display:flex;
+    margin-top: 10px;
+    font-weight: bold;
+    color:var(--gray)
+}
+.header-popUp .content .main .wrap .contact .about{
+    display:none;
+    font-size:20px;
+}
+.header-popUp .content .main .wrap .contact .about p{
+    font-size:13px;
+    padding:0;margin:0;
+}
+.header-popUp .content span:nth-child(1){
+    font-size: 12px;
+}
+.header-popUp .content span:nth-child(2){
+    font-size: 11px;
+}
+
+
+.header-popUp .content .main2{
+    position:relative;
+    display:none;
+    justify-content: center;
+    background:var(--white);
+    height:100%;
+    padding:10px;
+}
+.header-popUp .content .main2 .img-case{
+    display: flex;
+    align-items: center;
+    margin: 0 20px 20px 0;
+}
+.header-popUp .content .main2 .img-case img{
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+}
+.header-popUp .content .main2 .text-side{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    width: 100%;
+}
+
+.header-popUp .content .main2 .text-side h1,
+.header-popUp .content .main2 .text-side p:first-child{
+    margin-bottom:10px;
+}
+
+
+@media screen and (max-width:768px){
+    .header-popUp .content .main2{
+        flex-wrap: wrap;
+    }
+    .header-popUp .content .main2 .img-case{
+        width: 100%;
+        margin: 0 0 20px 0;
+    }
+    .header-popUp .content .main2 .img-case img{
+        width: 100%;
+    }
+}
+
+

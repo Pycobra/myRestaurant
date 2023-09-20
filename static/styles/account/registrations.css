@@ -1,0 +1,119 @@
+.registration{
+    display: grid;
+    /* justify-content: center;
+    align-items: center; */
+    /* width:40vw; */
+    /* overflow-y:hidden; */
+    /* height: 100%; */
+    z-index:3;
+    background-color: var(--white);
+    padding: 20px;
+    /* position:absolute; */
+    top:0;
+    left:0;
+}
+.login.registration{
+    display: none;
+}
+.signUp.registration{
+    display: none;
+}
+.registration .form-inside{
+    display: grid;
+    grid-template-columns:auto;
+    /* width:50%; */
+    background:var(--white);
+    gap: 10px;
+}
+.registration .form-inside .head{
+    font-size:25px;
+    font-weight:bold;
+    font-family:italic;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.registration .form-inside form{
+    display: grid;
+    grid-template-columns: auto;
+    padding: 0 20px;
+}
+.registration .form-inside form .input-row{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    padding-bottom: 15px;
+}
+.registration .form-inside form p.field-error{
+    font-size: 12px;
+    color: var(--red);
+    margin-bottom: 5px;
+}
+.registration .form-inside form .form-input{
+    height:35px;
+    border-radius:2px;
+    outline:none;
+    border:1px solid var(--normal);
+    padding: 0 10px;
+}
+.registration .form-inside form input:nth-child(2){
+}
+.registration .form-inside form .btn-wrap{
+    position: relative;
+    width:100%;
+}
+.registration .form-inside form button{
+    font-size:17px;
+    height:35px;
+    width:100%;
+    border:none;
+    border-radius:5px;
+    margin-top:5px;
+    background:#93e9be;
+    color:var(--white);
+}
+.registration .form-inside .icon2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin: 10px 0; */
+}
+.registration .form-inside .icon2 span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height:30px; */
+    width:50px;
+    font-size:13px;
+    background:var(--white);
+}
+.registration .form-inside .floor{
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    /* margin-bottom:40px; */
+}
+.registration .form-inside .floor span:nth-child(1){
+    font-size:15px;
+    margin-bottom:5px;
+}
+.registration .form-inside .floor span:nth-child(2){
+    font-size:14px;
+    color:var(--lightblue);
+}
+.registration .form-inside .floor span .in{
+    font-size:15px;
+    color:#93e9be;
+}
+
+
+
+
+
+
+@media screen and (max-width:768px){
+    .registration .form-inside{
+        /* width:70%; */
+    }
+} 
+

@@ -1,0 +1,229 @@
+{% comment %} {% load static %}
+{% block stylesheet12 %}{% static 'styles/order/delivery-address-detail.css' %}{% endblock %} {% endcomment %}
+
+  {% comment %} displays the delivery options & address {% endcomment %}
+  <section class="delivery-address-details">
+    <div class="container">
+    {% include 'account/address_form.html' %}
+    {% with data="you are not logged in" %}
+        {% include 'core/loading-icon.html' %}
+    {% endwith %}
+      <div class="first-box">
+        <div class="block block1">
+            <div class="head">
+                <span>Delivery Options</span>
+                <span>Please select your delivery options</span>
+            </div>
+            {% comment %} <div class="messages">
+                <div class="body">
+                    <span>
+                        <i style="margin-right:5px;" class="fa fa-info"></i>
+                        <span class="text">Please select a delivery method</span>
+                    </span>
+                    <div class="clear-delivery-msg">&times;</div>
+                </div>
+            </div> {% endcomment %}
+            <div class="card-col">
+            </div>
+            <div class="checkbox dummy-sample" style="display:none">
+                <input class="deliveryOption" type="radio" name="deliveryOption" value="">
+            </div>
+        </div>
+
+        <div class="block block2">
+            <div class="head">
+                <span>Delivery Address</span>
+                <span>Please select your delivery address</span>
+            </div>
+            {% comment %} <div class="messages">
+                <div class="body">
+                    <span style="display:flex;flex-wrap:no-wrap;">
+                        <i style="margin-right:5px;" class="fa fa-info"></i>
+                        <span class="text">Please select a delivery address</span>
+                    </span>
+                    <div class="clear-address-msg">&times;</div>
+                </div>
+            </div> {% endcomment %}
+            <div class="card-col">
+            </div>
+            <div class="card-add-address">
+              <a href="{% url 'account_:add_address' %}">
+                  <div class="icon-holder">
+                        <i class="fa fa-plus"></i><span>add address</span>
+                  </div>
+              </a>
+            </div>
+            <div class="checkbox dummy-sample" style="display:none">
+                <input class="addressOption" type="radio" name="addressOption" value="">
+            </div>
+            <span class="icon trash dummy-sample">
+                <i style="color:#e58686;font-size:15px;" class="fa fa-trash del-address" data-index="' + values.pk + '"></i>
+            </span>
+            <span class="icon pencil dummy-sample">
+                <i style="color:#e58686;font-size:15px;" class="fa fa-pencil" data-index="' + values.pk + '"></i>
+            </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+{% block scripts %}
+<script data-userauthentication="{{user.is_authenticated}}" data-mydeliveryopt = '{{mydeliveryopt}}' data-mydeliveryadd = '{{mydeliveryadd}}'>
+
+    $('.card-add-address').on(
+        {click: function(e){
+            e.preventDefault();
+            var id =$(this).attr('data-index');
+            $('#address').css('display','flex')
+        }}
+    )
+
+    $('input[type=radio][name=deliveryOption]').on(
+        'change', function(e) {
+        e.preventDefault();
+        var deliveryOption=$(this).val();
+        const user_authenticated = document.getElementById("authentication-status").value;
+        if (user_authenticated == 'True'){ 
+            $.ajax({
+                type: "POST",
+                url: '{% url "checkout_:cart_update_delivery" %}',
+                data: {
+                deliveryoption: deliveryOption,
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: "post",
+                },
+                success: function (json) {
+                    //$('.block1 > .messages').remove()
+                    $('.removable-card > .card-wrap > .checkbox').css("display","block")
+                    $('.fa-check').remove()
+                    const prevMainDelivery = $('.block1 > .card-col > .removable-card')
+                    prevMainDelivery.removeClass("removable-card")
+                    $('.block1 > .card-col > .other_card-col_container').prepend(prevMainDelivery)
+                    
+                    
+                    main_delivery = $('.card[data-index="'+ deliveryOption +'"]').clone(true)
+                    main_delivery.addClass("removable-card")
+                    $('.card[data-index="'+ deliveryOption +'"]').remove()
+                    $('.block1 > .card-col').prepend(main_delivery)
+                    $('.removable-card > .card-wrap')
+                        .append('<i style="margin:10px 0 20px 20px;color:var(--green)" class="fa fa-check"></i>')
+                    $('.removable-card > .card-wrap > .checkbox').css("display","none");
+
+                    $('.select-delivery').remove()
+                    other_card = $('.block1 > .card-col > .other_card-col_container > .card')
+                    if (other_card){
+                        console.log('hhhhhhh')
+                        const selectAnotherDelivery = document.createElement('div')
+                        selectAnotherDelivery.className = "select-delivery"
+                        selectAnotherDelivery.innerHTML = `<button style="margin:10px;margin-bottom:15px;">select another delivery method</button>`
+                        document.querySelector('.block1 > .card-col > .other_card-col_container').insertAdjacentElement('beforebegin' ,selectAnotherDelivery)    
+                    }
+
+                    alert('You chose a new delivery option')
+                    const container = document.querySelector('.product-frame > .body > .bottom > .delivery-address-details > .container > .first-box');
+                    containerTop = container.offsetTop
+                    container.scrollTo(0, containerTop)
+                },
+                error: function (xhr, errmsg, err) {},
+            });
+        }
+        else if (user_authenticated == 'False'){
+            $('.login').css('display','flex')
+        }
+    });
+
+    $('.addressOption').on(
+        'change', function(e) {
+            e.preventDefault();
+            var addressOption=$(this).val();
+            const user_authenticated = document.getElementById("authentication-status").value;
+            if (user_authenticated == 'True'){ 
+                $.ajax({
+                    type: "POST",
+                    /*url: '{% url 'account_:set_default' %}',*/
+                    url: '{% url "cart_:cart_update_address" %}',
+                    data: {
+                    address_id: addressOption,
+                    csrfmiddlewaretoken: "{{csrf_token}}",
+                    action: "post",
+                    },
+                    success: function (json) {
+                        //$('.block2 > .messages').remove()
+                        $('.removable-card > .card-wrap > .checkbox').css("display","block")
+                        $('.fa-check').remove()
+                        const prevMainAddress = $('.block2 > .card-col > .removable-card')
+                        prevMainAddress.removeClass("removable-card")
+                        $('.block2 > .card-col > .other_card-col_container').prepend(prevMainAddress)
+                        
+                        main_address = $('.card[data-index="'+ addressOption +'"]').clone(true)
+                        main_address.addClass("removable-card")
+                        $('.card[data-index="'+ addressOption +'"]').remove()
+                        $('.block2 > .card-col').prepend(main_address)
+                        $('.removable-card > .card-wrap')
+                            .append('<i style="margin:10px 0 20px 20px;color:var(--green)" class="fa fa-check"></i>')
+                        $('.removable-card > .card-wrap > .checkbox').css("display","none");
+
+                    
+                        $('.select-address').remove()
+                        const other_card = $('.block2 > .card-col > .other_card-col_container > .card')
+                        if (other_card){
+                            const selectAnotherAddress = document.createElement('div')
+                            selectAnotherAddress.className = "select-address"
+                            selectAnotherAddress.innerHTML = `<button style="margin:10px;margin-bottom:15px;">select another address</button>`
+                            document.querySelector('.block2 > .card-col > .other_card-col_container').insertAdjacentElement('beforebegin', selectAnotherAddress)    
+                        }
+
+                        alert('You chose a new address option')
+                        const container = document.querySelector('.product-frame > .body > .bottom > .delivery-address-details > .container > .first-box');
+                        containerTop = container.offsetTop
+                        container.scrollTo(0, containerTop)
+                    },
+                    error: function (xhr, errmsg, err) {},
+                });
+            }
+            else if (user_authenticated == 'False'){
+                $('.login').css('display','flex')
+            }
+        }
+    );
+
+    $('.del-address').on({
+        click: function(e){
+            var address_id=$(this).data('index');
+            /* $.ajax({
+            type: "POST",
+            url: '{% url "cart_:cart_update_address" %}',
+            data: {
+                address_id: address_id,
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: "delete_address",
+            },
+            success: function (json) {
+                $('.card[data-index="'+ address_id +'"]').remove()
+                if (json.address_in_session == 'true'){
+                    $('.select-address1').css('display', 'none')
+                    $('.select-address2').css('display', 'none')
+                    $('.address > .card').slideToggle(1000)
+                }
+                $('.block2 > .messages > .body > span > .text').text('Address with "' + address_id + '" id successfully deleted')
+                $('.block2 > .messages').slideDown(1000)
+            },
+            error: function (xhr, errmsg, err) {},
+            }); */
+        }
+    })
+    
+    $(document).on(
+        'click', '.select-delivery', function(e){
+            $('.block1 > .card-col > .other_card-col_container').slideToggle(1000)
+        }
+    )
+    $(document).on(
+        'click', '.select-address', function(e){
+            $('.block2 > .card-col > .other_card-col_container').slideToggle(1000)
+        }
+    )
+</script>
+{% endblock %}

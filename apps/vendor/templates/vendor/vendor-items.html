@@ -1,0 +1,96 @@
+{% comment %} {% load static %}
+{% block stylesheet14 %}{% static 'styles/vendor/vendor-item.css' %}{% endblock %} {% endcomment %}
+
+<div class="product-items">
+    {% include 'core/loading-icon.html' %}
+    <span class="item-count"></span>
+    {% include './option_choice.html' %}
+</div>
+
+
+{% block scripts %}
+<script>
+    $('.body > .head-pic > .line-2 > .vendor-header > button').on({
+        click: function(e){
+            const categoryID = $(this).attr('data-categoryID')
+            const vendorID = $('.vendor-pop-up.active').attr('data-vendorID')
+            const buttons = $('.body > .head-pic > .line-2 > .vendor-header > button')
+            buttons.attr('style', 'border-bottom:none;')
+            this.style.borderBottom = "2px solid var(--red)"
+
+            $('.product-frame > .body > .bottom > .product-items > .product-block').remove()
+            const ItemCount = $('.product-frame > .body > .bottom > .product-items > .item-count')
+            ItemCount.css('display', 'none')
+
+            const LoadingIcon = $('.product-frame > .body > .bottom > .product-items > .loading-icon')
+            const img = $('.product-frame > .body > .bottom > .product-items > .loading-icon > img.icon')
+            const info = $('.product-frame > .body > .bottom > .product-items > .loading-icon > .info')
+            LoadingIcon.addClass('keepmoving-icon').css('display', "flex")
+            img.css('display', "block")
+            info.css('display',"none")
+            $('.option-choice[data-index="dummy"]').css('display','none')
+
+            $.ajax({
+                type:"GET",
+                url:"{% url 'vendor_:select_category' %}",
+                data: {
+                    vendorID,
+                    categoryID,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    action: categoryID
+                },
+                success: function(json){
+                    VendorProductDisplay(json.product.table)
+                    const Wrapper = document.querySelector('.product-frame > .body > .bottom > .product-items')
+                    WrapperTop = container.offsetTop
+                    Wrapper.scrollTo(0, WrapperTop)
+                    LoadingIcon.css('display',"none")
+                },
+                error: function(xhr, errmsg, err){
+                    console.log('77777777777777up')
+                    info.css('display',"block").text('something is wrong with your internet')
+                    LoadingIcon.removeClass('keepmoving-icon')
+                }
+            });
+        }
+    })
+    
+    $(document).on(
+        'click', '.product-card', function(e){
+            const id = this.dataset.index;
+            const ingredient = this.querySelector('.ingredients').textContent.split(',')
+            const price = this.querySelector('.price').textContent
+            const img = this.querySelector('img').getAttribute('src')
+            $('.top > .top-wrapper > ul > li').remove()
+            $('.product-card > .left').css('background-color','var(--normalwhite)').css('padding','0').css('border-radius','0')
+            //$('.product-card > .left > .fa-caret-left').css('display','none')
+            $('.product-card[data-index="' + id + '"] > .left').css('background-color','#CCCDC6')
+            $('.product-card[data-index="' + id + '"] > .left').css('padding','5px').css('border-radius','3px')
+            //$('.product-card[data-index="' + id + '"] > .left > .fa-caret-left').css('display','block')
+
+            for (let i=0; i < ingredient.length; i++){
+                $('.option-choice[data-index="dummy"] > .inner > .top > .top-wrapper > ul')
+                .append('<li class="nil"><input class="ingredient" name="'+ ingredient[i] + i +'"type="checkbox"><span>' + ingredient[i] + '</span></li>')
+            }
+            $('.option-choice[data-index="dummy"] > .inner > .bottom > button').attr('data-index','' + id+ '')
+            $('.option-choice[data-index="dummy"] > .inner > .top > .img-place > img').attr('src',img)
+            $('.option-choice[data-index="dummy"]').css('display','flex')
+            $.ajax({
+                type:"POST",
+                url:" {% url 'product_:single_product' %}",
+                data: {
+                    id: id,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    action: 'post'
+                },
+                success: function(json){
+                },
+                error: function(xhr, errmsg, err){
+                    console.log('completed with error');
+                }
+            });
+        }
+    ) 
+</script>
+
+{% endblock %}
