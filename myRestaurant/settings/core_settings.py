@@ -1,20 +1,19 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = 'django-insecure-5!q(lb_zwd-k55ua7##t2!tr(%c@@^!gu44lsf2aw_0(1s^o(b'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 AUTH_USER_MODEL='account.UserBase'
-# LOGIN_URL='account_:login'
-# LOGIN_REDIRECT_URL='/'
-# LOGOUT_REDIRECT_URL='account_:login'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -28,7 +27,6 @@ SUBCRIPTION_TIMEOUT = 3
 
 INSTALLED_APPS = [
     'rest_framework',
-    # 'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,13 +46,11 @@ INSTALLED_APPS = [
     'apps.cart',
     'apps.checkout',
     'apps.vendor',
-    'mptt',
 ]
-
-PAYSTACK_PUBLIC_KEY = 'pk_test_1bd3d130cbb6f84a90e8cdb0e13a82a659ebbedc'
-PAYSTACK_SECRET_KEY = 'sk_test_8c231ece81620c5dfe92377a418f6165acec884d'
-FLUTTERWAVE_PUBLIC_KEY = 'FLWPUBK_TEST-b7eb58ee9768abf02faebf8420d803b5-X'
-FLUTTERWAVE_SECRET_KEY = ''
+PAYSTACK_PUBLIC_KEY =  os.getenv("PAYSTACK_PUBLIC_KEY")
+PAYSTACK_SECRET_KEY =  os.getenv("PAYSTACK_SECRET_KEY")
+FLUTTERWAVE_PUBLIC_KEY = os.getenv("FLUTTERWAVE_PUBLIC_KEY")
+FLUTTERWAVE_SECRET_KEY = os.getenv("FLUTTERWAVE_SECRET_KEY")
 
 
 MIDDLEWARE = [
@@ -213,6 +209,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=[
     BASE_DIR / 'static'
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, "static", "staticfiles_build", "staticfiles")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 

@@ -1,0 +1,14 @@
+nav .site-logo{
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: flex-start;
+    font-size:20px;
+    font-weight:bold;
+    color: var(--gray);
+    font-family:italics;
+    /* margin:0 0 0 40px; */
+}
+nav .site-logo span{
+    letter-spacing:3px;
+}
