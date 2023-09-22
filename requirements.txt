@@ -13,8 +13,6 @@ blinker==1.4
 Brotli==1.0.9
 certifi==2021.10.8
 cffi==1.15.0
-channels==3.0.4
-channels-redis==3.3.1
 chardet==4.0.0
 charset-normalizer==2.0.7
 click==8.0.3
@@ -28,7 +26,6 @@ dj-database-url==2.1.0
 Django==3.2.8
 django-cors-headers==4.0.0
 django-debug-toolbar==3.2.2
-django-heroku==0.3.1
 django-js-asset==1.2.2
 django-mptt==0.13.4
 djangorestframework==3.14.0
