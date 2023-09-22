@@ -4,6 +4,7 @@ click==8.0.3
 colorama==0.4.4
 daphne==3.0.2
 decouple==0.0.7
+dj-database-url==2.1.0
 Django==3.2.8
 django-cors-headers==4.0.0
 django-debug-toolbar==3.2.2
