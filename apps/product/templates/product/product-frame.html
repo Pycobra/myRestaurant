@@ -1,396 +1,396 @@
-
-    <div class="product-frame">
-        <div class="line1">
-            <div class="head-1"></div>
-            <div class="head-2">
-                <div class="modal-icon one"><i class="fa fa-cutlery"></i></div>
-                <div class="modal-icon two"><i class="fa fa-info"></i></div>
-                <div class="modal-icon three" style="padding:0;">
-                    <div class="cart-place">
-                        <i class="fa fa-shopping-cart"></i>
-                            {% with total_qty=cart|length %}
-                            <span class="qty">{% if total_qty > 0 %}{{ total_qty }}{% else %}0{% endif %}</span>
-                            {% endwith %}
-                    </div>
+{% load static %}
+<div class="product-frame">
+    <div class="line1">
+        <div class="head-1"></div>
+        <div class="head-2">
+            <div class="modal-icon one"><i class="fa fa-cutlery"></i></div>
+            <div class="modal-icon two"><i class="fa fa-info"></i></div>
+            <div class="modal-icon three" style="padding:0;">
+                <div class="cart-place">
+                    <i class="fa fa-shopping-cart"></i>
+                        {% with total_qty=cart|length %}
+                        <span class="qty">{% if total_qty > 0 %}{{ total_qty }}{% else %}0{% endif %}</span>
+                        {% endwith %}
                 </div>
             </div>
-        </div>
-        <img class="holding-chef" src="{% static 'img/site_images/chef2.PNG' %}">
-    
-        <div class="body">
-            <div class="top head-pic" style="position:relative;display:flex;justify-content:center;">
-                <div class="line-2">
-                    <div class="vendor-header">
-                        <button data-categoryID="all-vendor-products">All</button>
-                        {% for i in vendor_categories %}
-                            <button data-categoryID="{{i.id}}">{{i.name}}</button>
-                        {% endfor %}
-                    </div>
-                </div>
-                <img>
-            </div>
-    
-            <div class="bottom">
-                {% include 'vendor/vendor-items.html' %}
-    
-                {% include 'order/delivery-address-detail.html' %}
-    
-                {% include 'cart/cart.html' %}
-             </div>
         </div>
     </div>
+    <img class="holding-chef" src="{% static 'img/site_images/chef2.PNG' %}">
+
+    <div class="body">
+        <div class="top head-pic" style="position:relative;display:flex;justify-content:center;">
+            <div class="line-2">
+                <div class="vendor-header">
+                    <button data-categoryID="all-vendor-products">All</button>
+                    {% for i in vendor_categories %}
+                        <button data-categoryID="{{i.id}}">{{i.name}}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <img>
+        </div>
+
+        <div class="bottom">
+            {% include 'vendor/vendor-items.html' %}
+
+            {% include 'order/delivery-address-detail.html' %}
+
+            {% include 'cart/cart.html' %}
+            </div>
+    </div>
+</div>
+
+
+
+{% block scripts %}
+<script data-userauthentication="{{user.is_authenticated}}" data-mydeliveryopt = '{{mydeliveryopt}}' data-mydeliveryadd = '{{mydeliveryadd}}'>
     
-    
-    
-    {% block scripts %}
-    <script data-userauthentication="{{user.is_authenticated}}" data-mydeliveryopt = '{{mydeliveryopt}}' data-mydeliveryadd = '{{mydeliveryadd}}'>
+    var modal = document.getElementById("myModal");
+    var addressform = document.getElementById("address");
+    var option_choice = document.getElementsByClassName("option-choice")[0];
+    var loginForm = document.getElementsByClassName("login")[0];
+    var signupForm = document.getElementsByClassName("signUp")[0];
+
+    window.onclick = function(event) {
+        if (event.target == addressform) {
+            addressform.style.display = "none";
+        }
+        if (event.target == loginForm) {
+            loginForm.style.display = "none";
+        }
+        if (event.target == signupForm) {
+            signupForm.style.display = "none";
+        }
+        if (event.target == option_choice) {
+            $('.product-card > .left').css('background-color','var(--normalwhite)').css('padding','0').css('border-radius','0')
+            option_choice.style.display = "none";
+        }
+        if (event.target == modal && loginForm.style.display == "flex") {
+            loginForm.style.display = "none";
+        }
+        else if (event.target == modal && signupForm.style.display == "flex") {
+            signupForm.style.display = "none";
+        }
+        else if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    const DeliveryElementBoxes = (deliveryItem, deliveryObjs) => { 
+        const otherCardsContainerDiv1 = document.createElement('div')
+        otherCardsContainerDiv1.className = "other_card-col_container"
+        $(deliveryItem).each(function(index, values){
+            document.querySelector('.block1 > .card-col').insertAdjacentHTML(
+                "afterbegin", `<div class="card single${values.pk} removable-card" data-index="${values.pk}"> \
+                    <div class="card-wrap"> \
+                        <div class="place1"> \
+                            <div class="icon"> \
+                                ${
+                                    values.fields.delivery_method === 'Bike' ?
+                                        '<i class="fa fa-motorcycle"></i>'
+                                        : '<i class="fa fa-car"></i>' 
+                                }
+                            </div> \
+                            <div class="card-body"> \
+                                <p class="card-text name">${values.fields.delivery_name}</p> \
+                                <p class="card-text"><span>Your order should be delivered within</span> <span>${values.fields.delivery_timeframe}</span></p> \
+                                <p class="card-text"><span>delivery regionz</span> <span>${values.fields.delivery_region}</span></p> \
+                                <p class="card-text"><span>delivery method</span> <span>${values.fields.delivery_method}</span></p> \
+                                <p class="card-text"><span>delivery window</span> <span>${values.fields.delivery_window}</span></p> \
+                            </div> \
+                        </div> \
+                        <i style="color:var(--green)" class="fa fa-check"></i>
+                        
+                    </div> \
+                </div>`                            
+            )
+            $('.block1 > .checkbox.dummy-sample > .deliveryOption').attr('value','' + values.pk + '')
+            const clonedCheckbox = $('.block1 > .checkbox.dummy-sample').clone(true)
+            clonedCheckbox.removeClass("dummy-sample")
+            $(`.block1 > .card-col > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
+        })
+        document.querySelector('.block1 > .card-col').insertAdjacentElement("beforeend", otherCardsContainerDiv1)
+        $(deliveryObjs).each(function(index, values){
+            otherCardsContainerDiv1.insertAdjacentHTML("beforeend", 
+                `<div class="card single${values.pk}" data-index="${values.pk}"> \
+                    <div class="card-wrap"> \
+                        <div class="place1"> \
+                            <div class="icon"> \
+                                ${
+                                    values.fields.delivery_method === 'Bike' ?
+                                        '<i class="fa fa-motorcycle"></i>'
+                                        : '<i class="fa fa-car"></i>' 
+                                }
+                            </div> \
+                            <div class="card-body"> \
+                                <p class="card-text name">${values.fields.delivery_name}</p> \
+                                <p class="card-text"><span>Your order should be delivered within</span> <span>${values.fields.delivery_timeframe}</span></p> \
+                                <p class="card-text"><span>delivery regionz</span> <span>${values.fields.delivery_region}</span></p> \
+                                <p class="card-text"><span>delivery method</span> <span>${values.fields.delivery_method}</span></p> \
+                                <p class="card-text"><span>delivery window</span> <span>${values.fields.delivery_window}</span></p> \
+                            </div> \
+                        </div> \
+                    </div> \
+                </div>`     
+            )
+            
+            $('.block1 > .checkbox.dummy-sample > .deliveryOption').attr('value','' + values.pk + '')
+            const clonedCheckbox = $('.block1 > .checkbox.dummy-sample').clone(true)
+            clonedCheckbox.removeClass("dummy-sample").css('display',"block")
+            $(`.block1 > .card-col > .other_card-col_container > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
+        })
+    }
+    const AddressElementBoxes = (addressItem, addressObjs) => {  
+        const otherCardsContainerDiv2 = document.createElement('div')
+        otherCardsContainerDiv2.className = "other_card-col_container"   
+        $(addressItem).each(function(index, values){
+            document.querySelector('.block2 > .card-col').insertAdjacentHTML(
+                "afterbegin", `<div class="card single${values.pk} removable-card" data-index="${values.pk}"> \
+                    <div class="card-wrap"> \
+                        <div class="card-body"> \
+                            <p class="card-text"><span>Fullname: </span> <span>${values.fields.full_name}</span></p> \
+                            <p class="card-text"><span>Phone: </span> <span>${values.fields.phone}</span></p> \
+                            <p class="card-text"><span>Email:</span> <span class="email-text" data-index="${values.pk}">${values.fields.email}</span></p> \
+                            <p class="card-text"><span>Post code:</span> <span>${values.fields.postal_code}</span></p> \
+                            <p class="card-text"><span>Town/city:</span> <span>${values.fields.city}</span></p> \
+                            <p class="card-text"><span>Address1:</span> <span>${values.fields.address_line}</span></p> \
+                        </div> \
+                        <i style="color:var(--green)" class="fa fa-check"></i>
+                        
+                    </div>
+                </div>`
+            )
+            $('.block2 > .checkbox.dummy-sample > .addressOption').attr('value','' + values.pk + '')
+            const clonedCheckbox = $('.block2 > .checkbox.dummy-sample').clone(true)
+            clonedCheckbox.removeClass("dummy-sample").attr('value',`${values.pk}`)//.css('display',"block")
+            const clonedEditIcon = $('.block2 > .pencil.dummy-sample').clone(true)
+            clonedEditIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
+            const clonedDeleteIcon = $('.block2 > .trash.dummy-sample').clone(true)
+            clonedDeleteIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
+            
+            const iconWrapDiv = document.createElement('div')
+            iconWrapDiv.className= 'icon-wrap'
+            $(`.block2 > .card-col > .card.single${values.pk}`).append(iconWrapDiv)
+            $(`.block2 > .card-col > .card.single${values.pk} > .icon-wrap`).append(clonedEditIcon)
+            $(`.block2 > .card-col > .card.single${values.pk} > .icon-wrap`).append(clonedDeleteIcon)
+            $(`.block2 > .card-col > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
+        })
+        document.querySelector('.block2 > .card-col').insertAdjacentElement("beforeend", otherCardsContainerDiv2)
+        $(addressObjs).each(function(index, values){
+            otherCardsContainerDiv2.insertAdjacentHTML("beforeend", 
+                `<div class="card single${values.pk}" data-index="${values.pk}"> \
+                    <div class="card-wrap"> \
+                        <div class="card-body"> \
+                            <p class="card-text"><span>Fullname: </span> <span>${values.fields.full_name}</span></p> \
+                            <p class="card-text"><span>Phone: </span> <span>${values.fields.phone}</span></p> \
+                            <p class="card-text"><span>Email:</span> <span class="email-text" data-index="${values.pk}">${values.fields.email}</span></p> \
+                            <p class="card-text"><span>Post code:</span> <span>${values.fields.postal_code}</span></p> \
+                            <p class="card-text"><span>Town/city:</span> <span>${values.fields.city}</span></p> \
+                            <p class="card-text"><span>Address1:</span> <span>${values.fields.address_line}</span></p> \
+                        </div> \
+                    </div>
+                </div>`
+            )
+            $('.block2 > .checkbox.dummy-sample > .addressOption').attr('value','' + values.pk + '')
+            const clonedCheckbox = $('.block2 > .checkbox.dummy-sample').clone(true)
+            clonedCheckbox.removeClass("dummy-sample").css('display',"block")
+            const clonedEditIcon = $('.block2 > .pencil.dummy-sample').clone(true)
+            clonedEditIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
+            const clonedDeleteIcon = $('.block2 > .trash.dummy-sample').clone(true)
+            clonedDeleteIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
+            
+            const iconWrapDiv = document.createElement('div')
+            iconWrapDiv.className= 'icon-wrap'
+            $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk}`).append(iconWrapDiv)
+            $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk} > .icon-wrap`).append(clonedEditIcon)
+            $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk} > .icon-wrap`).append(clonedDeleteIcon)
+            $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
+            
+        })
+    }
+    const createDeliveryContent = (modaIcon) => {
+        modaIcon.querySelector('i').style.border= '2px solid var(--black)'
+        $('.product-frame > .body > .bottom > .product-items').css('display','none')
+        $('.product-frame > .body > .bottom > .cart-items').css('display','none')
+        $('.product-frame > .body > .bottom > .delivery-address-details').css('display','flex')
         
-        var modal = document.getElementById("myModal");
-        var addressform = document.getElementById("address");
-        var option_choice = document.getElementsByClassName("option-choice")[0];
-        var loginForm = document.getElementsByClassName("login")[0];
-        var signupForm = document.getElementsByClassName("signUp")[0];
-    
-        window.onclick = function(event) {
-          if (event.target == addressform) {
-              addressform.style.display = "none";
-          }
-          if (event.target == loginForm) {
-              loginForm.style.display = "none";
-          }
-          if (event.target == signupForm) {
-              signupForm.style.display = "none";
-          }
-          if (event.target == option_choice) {
-              $('.product-card > .left').css('background-color','var(--normalwhite)').css('padding','0').css('border-radius','0')
-              option_choice.style.display = "none";
-          }
-          if (event.target == modal && loginForm.style.display == "flex") {
-              loginForm.style.display = "none";
-          }
-          else if (event.target == modal && signupForm.style.display == "flex") {
-              signupForm.style.display = "none";
-          }
-          else if (event.target == modal) {
-              modal.style.display = "none";
-          }
-        }
-    
-        const DeliveryElementBoxes = (deliveryItem, deliveryObjs) => { 
-            const otherCardsContainerDiv1 = document.createElement('div')
-            otherCardsContainerDiv1.className = "other_card-col_container"
-            $(deliveryItem).each(function(index, values){
-                document.querySelector('.block1 > .card-col').insertAdjacentHTML(
-                    "afterbegin", `<div class="card single${values.pk} removable-card" data-index="${values.pk}"> \
-                        <div class="card-wrap"> \
-                            <div class="place1"> \
-                                <div class="icon"> \
-                                    ${
-                                        values.fields.delivery_method === 'Bike' ?
-                                            '<i class="fa fa-motorcycle"></i>'
-                                            : '<i class="fa fa-car"></i>' 
-                                    }
-                                </div> \
-                                <div class="card-body"> \
-                                    <p class="card-text name">${values.fields.delivery_name}</p> \
-                                    <p class="card-text"><span>Your order should be delivered within</span> <span>${values.fields.delivery_timeframe}</span></p> \
-                                    <p class="card-text"><span>delivery regionz</span> <span>${values.fields.delivery_region}</span></p> \
-                                    <p class="card-text"><span>delivery method</span> <span>${values.fields.delivery_method}</span></p> \
-                                    <p class="card-text"><span>delivery window</span> <span>${values.fields.delivery_window}</span></p> \
-                                </div> \
-                            </div> \
-                            <i style="color:var(--green)" class="fa fa-check"></i>
-                            
-                        </div> \
-                    </div>`                            
-                )
-                $('.block1 > .checkbox.dummy-sample > .deliveryOption').attr('value','' + values.pk + '')
-                const clonedCheckbox = $('.block1 > .checkbox.dummy-sample').clone(true)
-                clonedCheckbox.removeClass("dummy-sample")
-                $(`.block1 > .card-col > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
-            })
-            document.querySelector('.block1 > .card-col').insertAdjacentElement("beforeend", otherCardsContainerDiv1)
-            $(deliveryObjs).each(function(index, values){
-                otherCardsContainerDiv1.insertAdjacentHTML("beforeend", 
-                    `<div class="card single${values.pk}" data-index="${values.pk}"> \
-                        <div class="card-wrap"> \
-                            <div class="place1"> \
-                                <div class="icon"> \
-                                    ${
-                                        values.fields.delivery_method === 'Bike' ?
-                                            '<i class="fa fa-motorcycle"></i>'
-                                            : '<i class="fa fa-car"></i>' 
-                                    }
-                                </div> \
-                                <div class="card-body"> \
-                                    <p class="card-text name">${values.fields.delivery_name}</p> \
-                                    <p class="card-text"><span>Your order should be delivered within</span> <span>${values.fields.delivery_timeframe}</span></p> \
-                                    <p class="card-text"><span>delivery regionz</span> <span>${values.fields.delivery_region}</span></p> \
-                                    <p class="card-text"><span>delivery method</span> <span>${values.fields.delivery_method}</span></p> \
-                                    <p class="card-text"><span>delivery window</span> <span>${values.fields.delivery_window}</span></p> \
-                                </div> \
-                            </div> \
-                        </div> \
-                    </div>`     
-                )
-                
-                $('.block1 > .checkbox.dummy-sample > .deliveryOption').attr('value','' + values.pk + '')
-                const clonedCheckbox = $('.block1 > .checkbox.dummy-sample').clone(true)
-                clonedCheckbox.removeClass("dummy-sample").css('display',"block")
-                $(`.block1 > .card-col > .other_card-col_container > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
-            })
-        }
-        const AddressElementBoxes = (addressItem, addressObjs) => {  
-            const otherCardsContainerDiv2 = document.createElement('div')
-            otherCardsContainerDiv2.className = "other_card-col_container"   
-            $(addressItem).each(function(index, values){
-                document.querySelector('.block2 > .card-col').insertAdjacentHTML(
-                    "afterbegin", `<div class="card single${values.pk} removable-card" data-index="${values.pk}"> \
-                        <div class="card-wrap"> \
-                            <div class="card-body"> \
-                                <p class="card-text"><span>Fullname: </span> <span>${values.fields.full_name}</span></p> \
-                                <p class="card-text"><span>Phone: </span> <span>${values.fields.phone}</span></p> \
-                                <p class="card-text"><span>Email:</span> <span class="email-text" data-index="${values.pk}">${values.fields.email}</span></p> \
-                                <p class="card-text"><span>Post code:</span> <span>${values.fields.postal_code}</span></p> \
-                                <p class="card-text"><span>Town/city:</span> <span>${values.fields.city}</span></p> \
-                                <p class="card-text"><span>Address1:</span> <span>${values.fields.address_line}</span></p> \
-                            </div> \
-                            <i style="color:var(--green)" class="fa fa-check"></i>
-                            
-                        </div>
-                    </div>`
-                )
-                $('.block2 > .checkbox.dummy-sample > .addressOption').attr('value','' + values.pk + '')
-                const clonedCheckbox = $('.block2 > .checkbox.dummy-sample').clone(true)
-                clonedCheckbox.removeClass("dummy-sample").attr('value',`${values.pk}`)//.css('display',"block")
-                const clonedEditIcon = $('.block2 > .pencil.dummy-sample').clone(true)
-                clonedEditIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
-                const clonedDeleteIcon = $('.block2 > .trash.dummy-sample').clone(true)
-                clonedDeleteIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
-                
-                const iconWrapDiv = document.createElement('div')
-                iconWrapDiv.className= 'icon-wrap'
-                $(`.block2 > .card-col > .card.single${values.pk}`).append(iconWrapDiv)
-                $(`.block2 > .card-col > .card.single${values.pk} > .icon-wrap`).append(clonedEditIcon)
-                $(`.block2 > .card-col > .card.single${values.pk} > .icon-wrap`).append(clonedDeleteIcon)
-                $(`.block2 > .card-col > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
-            })
-            document.querySelector('.block2 > .card-col').insertAdjacentElement("beforeend", otherCardsContainerDiv2)
-            $(addressObjs).each(function(index, values){
-                otherCardsContainerDiv2.insertAdjacentHTML("beforeend", 
-                    `<div class="card single${values.pk}" data-index="${values.pk}"> \
-                        <div class="card-wrap"> \
-                            <div class="card-body"> \
-                                <p class="card-text"><span>Fullname: </span> <span>${values.fields.full_name}</span></p> \
-                                <p class="card-text"><span>Phone: </span> <span>${values.fields.phone}</span></p> \
-                                <p class="card-text"><span>Email:</span> <span class="email-text" data-index="${values.pk}">${values.fields.email}</span></p> \
-                                <p class="card-text"><span>Post code:</span> <span>${values.fields.postal_code}</span></p> \
-                                <p class="card-text"><span>Town/city:</span> <span>${values.fields.city}</span></p> \
-                                <p class="card-text"><span>Address1:</span> <span>${values.fields.address_line}</span></p> \
-                            </div> \
-                        </div>
-                    </div>`
-                )
-                $('.block2 > .checkbox.dummy-sample > .addressOption').attr('value','' + values.pk + '')
-                const clonedCheckbox = $('.block2 > .checkbox.dummy-sample').clone(true)
-                clonedCheckbox.removeClass("dummy-sample").css('display',"block")
-                const clonedEditIcon = $('.block2 > .pencil.dummy-sample').clone(true)
-                clonedEditIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
-                const clonedDeleteIcon = $('.block2 > .trash.dummy-sample').clone(true)
-                clonedDeleteIcon.removeClass("dummy-sample").attr('value',`${values.pk}`)
-                
-                const iconWrapDiv = document.createElement('div')
-                iconWrapDiv.className= 'icon-wrap'
-                $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk}`).append(iconWrapDiv)
-                $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk} > .icon-wrap`).append(clonedEditIcon)
-                $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk} > .icon-wrap`).append(clonedDeleteIcon)
-                $(`.block2 > .card-col > .other_card-col_container > .card.single${values.pk} > .card-wrap`).append(clonedCheckbox)
-                
-            })
-        }
-        const createDeliveryContent = (modaIcon) => {
-            modaIcon.querySelector('i').style.border= '2px solid var(--black)'
-            $('.product-frame > .body > .bottom > .product-items').css('display','none')
-            $('.product-frame > .body > .bottom > .cart-items').css('display','none')
-            $('.product-frame > .body > .bottom > .delivery-address-details').css('display','flex')
-            
-            $('.removable-card').remove()
-            $('.removable-icon-box').remove()
-    
-            $(".delivery-address-details > .container > .first-box").css('display','none')
-            const LoadingIcon = $('.delivery-address-details > .container > .loading-icon')
-            const img = $('.delivery-address-details > .container > .loading-icon > img.icon')
-            const info = $('.delivery-address-details > .container > .loading-icon > .info')
-            LoadingIcon.addClass('keepmoving-icon').css('display', "flex")
-            img.css('display', "block")
-            info.css('display',"none")
-    
-            const AlreadyExistSelectAnotherDelivery = document.querySelector('.select-delivery')
-            const AlreadyExistSelectAnotherAddress = document.querySelector('.select-address')
-            const AlreadyExistCardDelivery = document.querySelector('.block1 > .card-col > .card')
-            const AlreadyExistCardAddress = document.querySelector('.block2 > .card-col > .card')
-            const AlreadyExistOtherCardDelivery = document.querySelector('.block1 > .card-col > .other_card-col_container')
-            const AlreadyExistOtherCardAddress = document.querySelector('.block2 > .card-col > .other_card-col_container')
-            AlreadyExistCardAddress ? AlreadyExistCardAddress.remove() : null
-            AlreadyExistCardDelivery ? AlreadyExistCardDelivery.remove() : null
-            AlreadyExistOtherCardAddress ? AlreadyExistOtherCardAddress.remove() : null
-            AlreadyExistOtherCardDelivery ? AlreadyExistOtherCardDelivery.remove() : null
-            AlreadyExistSelectAnotherDelivery ? AlreadyExistSelectAnotherDelivery.remove() : null
-            AlreadyExistSelectAnotherAddress ? AlreadyExistSelectAnotherAddress.remove() : null
-    
-            {% comment %} const card_already_exist_in_dom = $('.block > .card-col > .other_card-col_container').html()
-            if (!card_already_exist_in_dom){ {% endcomment %}
-            $.ajax({
-                type:"POST",
-                url:"{% url 'cart_:delivery_and_address' %}",
-                data: {
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                },
-                success: function(json){
-                    LoadingIcon.css('display',"none")
-                    $(".delivery-address-details > .container > .first-box").css('display','grid')         
-                    if (json.mydeliveryopt.data_table.length &&  json.deliveryoptions.data_table.length){
-                        const selectAnotherDelivery = document.createElement('div')
-                        selectAnotherDelivery.className = "select-delivery"
-                        selectAnotherDelivery.innerHTML = `<button style="margin:10px;margin-bottom:15px;">select another delivery method</button>`
-                        document.querySelector('.block1 > .card-col').insertAdjacentElement('afterbegin', selectAnotherDelivery)    
-                    }
-                    DeliveryElementBoxes(json.mydeliveryopt.data_table, json.deliveryoptions.data_table)
-                    if (json.mydeliveryadd.data_table.length &&  json.deliveryaddressess.data_table.length){
-                        const selectAnotherAddress = document.createElement('div')
-                        selectAnotherAddress.className = "select-address"
-                        selectAnotherAddress.innerHTML = `<button style="margin:10px;margin-bottom:15px;">select another address</button>`
-                        document.querySelector('.block2 > .card-col').insertAdjacentElement('afterbegin', selectAnotherAddress)
-                    }
-                    AddressElementBoxes(json.mydeliveryadd.data_table, json.deliveryaddressess.data_table)
-                    $(`.block > .dummy-sample`).css('display', 'none')
-                },
-                error: function(xhr, errmsg, err){
-                    info.text('something is wrong with your internet').css('display',"block")
-                    LoadingIcon.removeClass('keepmoving-icon')
-                    $(".delivery-address-details > .container > .first-box").css('display','none')
-                    console.log('completed with error');
-                }
-            });
-        }
+        $('.removable-card').remove()
+        $('.removable-icon-box').remove()
 
-        function createCartContent(modalIcon){
-            modalIcon.querySelector('.qty').style.background= 'var(--black)'
-            
-            $(".product-frame > .body > .bottom > .cart-items > .box > .inside-box > .info").remove()
-            $('.product-frame > .body > .bottom > .product-items').css('display','none')
-            $('.product-frame > .body > .bottom > .delivery-address-details').css('display','none')
-            $('.product-frame > .body > .bottom > .cart-items').css('display','block')
-            
-            const LoadingIcon = $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .loading-icon')
-            const img = $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .loading-icon > img.icon')
-            const info = $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .loading-icon > .info')
-            LoadingIcon.addClass('keepmoving-icon').css('display', "flex")
-            img.css('display', "block")
-            info.css('display',"none")
-            $(".product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row").css('display','none')
-    
-            $.ajax({
-                type:"POST",
-                url:"{% url 'cart_:inside_cart' %}",
-                data: {
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                    action: 'post'
-                },
-                success: function(json){
-                    LoadingIcon.css('display',"none")
-                    info.remove()
-                    $(".product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row").css('display','flex')
-                    $('.cart-item-block').remove()
-    
-                    if (json.cart_items.length != 0){
-                        $('.total-qty').text(json.total_qty);
-                        $('.total-cost').text('N' + json.total_amt);
-                        $('#delivery-amt').text('N' + json.delivery_amt);
-                        $('#final-total').text('N' + json.final_total);
-                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .checkout').css('display','flex')
-    
-                        $(json.cart_items).each(function(index, values){
-                            console.log(values.images, "7=7=7=7=7=7")
-                            $('.cart-item-dummy').css('display','flex')
-                            $('.cart-item-dummy').attr('data-index', '' + values.id + '')
-                            $('.cart-item-dummy > .first-block > .block1 > img').attr('src', '/media/' + values.images + '')
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-1 > .title').text(values.title)
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-1 > .price1').text(values.price)
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > button').attr('data-index', '' + values.id + '')
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > button:first-child').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > button:last-child').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .items-total').attr('data-index', '' + values.id + '')
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .items-total').text(values.total_price)
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .item-qty').text(values.quantity).attr('data-index', '' + values.id + '')
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > button').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
-                            $('.cart-item-dummy > .first-block > .block2 > .innerblock > .second-line > button').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
-                            the_clone = $('.cart-item-dummy').clone(true)
-                            the_clone.removeClass('cart-item-dummy')
-                            the_clone.addClass('cart-item-block')
-                            $('.cart-item-dummy').css('display','none')
-                            $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row').append(the_clone)
-                            $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .checkout').css('display','block')
-                        })
-                    } else {
-                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row').css('display','none')
-                        $('.product-frame > .body > .bottom > .cart-items > .box').css('height','100%')
-                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > p').remove()
-                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box').append('<p class="info">You dont have any product in your cart</p>')
-                    }
-                },
-                error: function(xhr, errmsg, err){
-                    info.text('something is wrong with your internet').css('display',"block")
-                    LoadingIcon.removeClass('keepmoving-icon')
-                    console.log('completed with error');
-                }
-            });
-        }
+        $(".delivery-address-details > .container > .first-box").css('display','none')
+        const LoadingIcon = $('.delivery-address-details > .container > .loading-icon')
+        const img = $('.delivery-address-details > .container > .loading-icon > img.icon')
+        const info = $('.delivery-address-details > .container > .loading-icon > .info')
+        LoadingIcon.addClass('keepmoving-icon').css('display', "flex")
+        img.css('display', "block")
+        info.css('display',"none")
 
-        $('.modal-icon').on({
-            click: function(e){
-                const allModalIcon = document.querySelectorAll('.modal-icon')
-                Array.from(allModalIcon).map(element => {
-                    element.classList.remove('active')
-                    element.querySelector('i').style.color= 'var(--gray)'
-                })
-                $('.modal-icon:nth-child(2) > i').css("border", '2px solid var(--gray)')
-                document.querySelector('.modal-icon:last-child').querySelector('.qty').style.background= 'var(--gray)'
-            
-                this.querySelector('i').style.color= 'var(--black)'
-                this.classList.add('active')
-                vendorCategoryHeader = $('.body > .head-pic > .line-2')
-                vendorCategoryHeader.css("display", "none") 
-                
-                if ($(this).hasClass('one')){
-                    vendorCategoryHeader = $('.body > .head-pic > .line-2')
-                    vendorCategoryHeader.css("display", "flex")
-                    var prod_id=$(this).data('index');
-                    $('.product-frame > .body > .bottom > .delivery-address-details').css('display','none')
-                    $('.product-frame > .body > .bottom > .cart-items').css('display','none')
-                    $('.product-frame > .body > .bottom > .product-items').css('display','flex')
-                    
-                    $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/restaurant.jpg')
-    
-                    $('.modal-icon:nth-child(2) > i').css("color", 'var(--gray)')
-                    $('.modal-icon:nth-child(2) > i').css("border", '2px solid var(--gray)')
-                    document.querySelector('.modal-icon:last-child').querySelector('i').style.color= 'var(--gray)'
-                    document.querySelector('.modal-icon:last-child').querySelector('.qty').style.background= 'var(--gray)'
-                    this.querySelector('i').style.color= 'var(--black)'
-                    $(this).addClass('active')
+        const AlreadyExistSelectAnotherDelivery = document.querySelector('.select-delivery')
+        const AlreadyExistSelectAnotherAddress = document.querySelector('.select-address')
+        const AlreadyExistCardDelivery = document.querySelector('.block1 > .card-col > .card')
+        const AlreadyExistCardAddress = document.querySelector('.block2 > .card-col > .card')
+        const AlreadyExistOtherCardDelivery = document.querySelector('.block1 > .card-col > .other_card-col_container')
+        const AlreadyExistOtherCardAddress = document.querySelector('.block2 > .card-col > .other_card-col_container')
+        AlreadyExistCardAddress ? AlreadyExistCardAddress.remove() : null
+        AlreadyExistCardDelivery ? AlreadyExistCardDelivery.remove() : null
+        AlreadyExistOtherCardAddress ? AlreadyExistOtherCardAddress.remove() : null
+        AlreadyExistOtherCardDelivery ? AlreadyExistOtherCardDelivery.remove() : null
+        AlreadyExistSelectAnotherDelivery ? AlreadyExistSelectAnotherDelivery.remove() : null
+        AlreadyExistSelectAnotherAddress ? AlreadyExistSelectAnotherAddress.remove() : null
+
+        {% comment %} const card_already_exist_in_dom = $('.block > .card-col > .other_card-col_container').html()
+        if (!card_already_exist_in_dom){ {% endcomment %}
+        $.ajax({
+            type:"POST",
+            url:"{% url 'cart_:delivery_and_address' %}",
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+            success: function(json){
+                LoadingIcon.css('display',"none")
+                $(".delivery-address-details > .container > .first-box").css('display','grid')         
+                if (json.mydeliveryopt.data_table.length &&  json.deliveryoptions.data_table.length){
+                    const selectAnotherDelivery = document.createElement('div')
+                    selectAnotherDelivery.className = "select-delivery"
+                    selectAnotherDelivery.innerHTML = `<button style="margin:10px;margin-bottom:15px;">select another delivery method</button>`
+                    document.querySelector('.block1 > .card-col').insertAdjacentElement('afterbegin', selectAnotherDelivery)    
                 }
-                if ($(this).hasClass('two')){
-                    $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/google-map2.png')
-                    createDeliveryContent(this)
+                DeliveryElementBoxes(json.mydeliveryopt.data_table, json.deliveryoptions.data_table)
+                if (json.mydeliveryadd.data_table.length &&  json.deliveryaddressess.data_table.length){
+                    const selectAnotherAddress = document.createElement('div')
+                    selectAnotherAddress.className = "select-address"
+                    selectAnotherAddress.innerHTML = `<button style="margin:10px;margin-bottom:15px;">select another address</button>`
+                    document.querySelector('.block2 > .card-col').insertAdjacentElement('afterbegin', selectAnotherAddress)
                 }
-                if ($(this).hasClass('three')){
-                    $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/shopping-cart2.png')
-                    createCartContent(this)
-                }
+                AddressElementBoxes(json.mydeliveryadd.data_table, json.deliveryaddressess.data_table)
+                $(`.block > .dummy-sample`).css('display', 'none')
+            },
+            error: function(xhr, errmsg, err){
+                info.text('something is wrong with your internet').css('display',"block")
+                LoadingIcon.removeClass('keepmoving-icon')
+                $(".delivery-address-details > .container > .first-box").css('display','none')
+                console.log('completed with error');
             }
-        }) 
-    </script>
-    {% endblock %}
+        });
+    }
+
+    function createCartContent(modalIcon){
+        modalIcon.querySelector('.qty').style.background= 'var(--black)'
+        
+        $(".product-frame > .body > .bottom > .cart-items > .box > .inside-box > .info").remove()
+        $('.product-frame > .body > .bottom > .product-items').css('display','none')
+        $('.product-frame > .body > .bottom > .delivery-address-details').css('display','none')
+        $('.product-frame > .body > .bottom > .cart-items').css('display','block')
+        
+        const LoadingIcon = $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .loading-icon')
+        const img = $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .loading-icon > img.icon')
+        const info = $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .loading-icon > .info')
+        LoadingIcon.addClass('keepmoving-icon').css('display', "flex")
+        img.css('display', "block")
+        info.css('display',"none")
+        $(".product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row").css('display','none')
+
+        $.ajax({
+            type:"POST",
+            url:"{% url 'cart_:inside_cart' %}",
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+            success: function(json){
+                LoadingIcon.css('display',"none")
+                info.remove()
+                $(".product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row").css('display','flex')
+                $('.cart-item-block').remove()
+
+                if (json.cart_items.length != 0){
+                    $('.total-qty').text(json.total_qty);
+                    $('.total-cost').text('N' + json.total_amt);
+                    $('#delivery-amt').text('N' + json.delivery_amt);
+                    $('#final-total').text('N' + json.final_total);
+                    $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .checkout').css('display','flex')
+
+                    $(json.cart_items).each(function(index, values){
+                        console.log(values.images, "7=7=7=7=7=7")
+                        $('.cart-item-dummy').css('display','flex')
+                        $('.cart-item-dummy').attr('data-index', '' + values.id + '')
+                        $('.cart-item-dummy > .first-block > .block1 > img').attr('src', '/media/' + values.images + '')
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-1 > .title').text(values.title)
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-1 > .price1').text(values.price)
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > button').attr('data-index', '' + values.id + '')
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > button:first-child').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > button:last-child').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .items-total').attr('data-index', '' + values.id + '')
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .items-total').text(values.total_price)
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > .numbers > .item-qty').text(values.quantity).attr('data-index', '' + values.id + '')
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > button').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
+                        $('.cart-item-dummy > .first-block > .block2 > .innerblock > .second-line > button').attr('value', '' + values.id + '').attr('data-index', '' + values.id + '')
+                        the_clone = $('.cart-item-dummy').clone(true)
+                        the_clone.removeClass('cart-item-dummy')
+                        the_clone.addClass('cart-item-block')
+                        $('.cart-item-dummy').css('display','none')
+                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row').append(the_clone)
+                        $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .checkout').css('display','block')
+                    })
+                } else {
+                    $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > .body-row').css('display','none')
+                    $('.product-frame > .body > .bottom > .cart-items > .box').css('height','100%')
+                    $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box > p').remove()
+                    $('.product-frame > .body > .bottom > .cart-items > .box > .inside-box').append('<p class="info">You dont have any product in your cart</p>')
+                }
+            },
+            error: function(xhr, errmsg, err){
+                info.text('something is wrong with your internet').css('display',"block")
+                LoadingIcon.removeClass('keepmoving-icon')
+                console.log('completed with error');
+            }
+        });
+    }
+
+    $('.modal-icon').on({
+        click: function(e){
+            const allModalIcon = document.querySelectorAll('.modal-icon')
+            Array.from(allModalIcon).map(element => {
+                element.classList.remove('active')
+                element.querySelector('i').style.color= 'var(--gray)'
+            })
+            $('.modal-icon:nth-child(2) > i').css("border", '2px solid var(--gray)')
+            document.querySelector('.modal-icon:last-child').querySelector('.qty').style.background= 'var(--gray)'
+        
+            this.querySelector('i').style.color= 'var(--black)'
+            this.classList.add('active')
+            vendorCategoryHeader = $('.body > .head-pic > .line-2')
+            vendorCategoryHeader.css("display", "none") 
+            
+            if ($(this).hasClass('one')){
+                vendorCategoryHeader = $('.body > .head-pic > .line-2')
+                vendorCategoryHeader.css("display", "flex")
+                var prod_id=$(this).data('index');
+                $('.product-frame > .body > .bottom > .delivery-address-details').css('display','none')
+                $('.product-frame > .body > .bottom > .cart-items').css('display','none')
+                $('.product-frame > .body > .bottom > .product-items').css('display','flex')
+                
+                $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/restaurant.jpg')
+
+                $('.modal-icon:nth-child(2) > i').css("color", 'var(--gray)')
+                $('.modal-icon:nth-child(2) > i').css("border", '2px solid var(--gray)')
+                document.querySelector('.modal-icon:last-child').querySelector('i').style.color= 'var(--gray)'
+                document.querySelector('.modal-icon:last-child').querySelector('.qty').style.background= 'var(--gray)'
+                this.querySelector('i').style.color= 'var(--black)'
+                $(this).addClass('active')
+            }
+            if ($(this).hasClass('two')){
+                $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/google-map2.png')
+                createDeliveryContent(this)
+            }
+            if ($(this).hasClass('three')){
+                $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/shopping-cart2.png')
+                createCartContent(this)
+            }
+        }
+    }) 
+</script>
+{% endblock %}
 
 
 
