@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -159,16 +160,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myRestaurant.wsgi.application'
 
-
+DATABASES_URL = os.getenv("DATABASE_URL")
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.getenv("PGDATABASE"),
+#         'USER': os.getenv("PGUSER"),
+#         "PASSWORD": os.getenv("PGPASSWORD"),
+#         "HOST": os.getenv("PGHOST"),
+#         "PORT": os.getenv("PGPORT"),
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("PGDATABASE"),
-        'USER': os.getenv("PGUSER"),
-        "PASSWORD": os.getenv("PGPASSWORD"),
-        "HOST": os.getenv("PGHOST"),
-        "PORT": os.getenv("PGPORT"),
-    }
+    'default': dj_database_url.config(default=DATABASES_URL, conn_max_age=1800),
 }
 
 # DATABASES = {
