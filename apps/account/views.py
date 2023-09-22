@@ -72,12 +72,6 @@ def account_registration(request):
         registrationform = RegistrationForm(request.POST)
         if registrationform.is_valid():
             user=registrationform.save(commit=False)
-            # email =registrationform.cleaned_data['email']
-            # user_name=registrationform.cleaned_data['user_name']
-            # password = registrationform.cleaned_data['password']
-            # UserBase.objects.create_user(email=email, password=password,
-            # user_name=user_name)
-
             user.email=registrationform.cleaned_data['email']
             user.user_name=registrationform.cleaned_data['user_name']
             user.set_password(registrationform.cleaned_data['password'])

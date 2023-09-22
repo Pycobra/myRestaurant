@@ -36,10 +36,6 @@ def best_selling_vendor(request):
     if request.method == 'GET':
         distinct5 = []
         orderDetail = OrderedItemDetail.objects.all().order_by('-quantity')
-        # for i in orderDetail: 
-        #     if i.product not in distinct5:
-        #         distinct5.append(i.product)
-        # groupedOrderDetail = OrderedItemDetail.objects.filter(product__in=distinct5[:5])
         order_list = []
         product_list = []
         for ord in orderDetail: 

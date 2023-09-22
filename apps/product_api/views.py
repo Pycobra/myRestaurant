@@ -41,24 +41,6 @@ def single_category(request, id):
 def all_product(request):
     if request.method == 'GET':
         data = Product.objects.all()
-        # orderDetail = OrderedItemDetail.objects.all().order_by('-quantity')
-        # order_list = []
-        # product_list = []
-        # for ord in enumerate(orderDetail): 
-        #     if len(order_list)== 0 and len(product_list)== 0:
-        #         product_list.append(ord[1].product)
-        #         order_list.append(ord[1])
-        #     if ord[1].product in product_list:
-        #         for prod in enumerate(order_list):
-        #             if ord[1].order.order_key == prod[1].order.order_key:
-        #                 index = prod[0]
-        #                 ord[1].quantity = ord[1].quantity + order_list[index].quantity 
-        #     elif ord[1].product not in product_list:
-        #         product_list.append(ord[1].product)
-        #         order_list.append(ord[1])
-        # for i in order_list:
-        #     print(i.quantity)
-        # print(order_list, "bn bn bnb nb bnb bnb nb ")
 
         recent = Product.objects.all().order_by('-created_at')[:6]
         serializer = ProductSerializer(data, context={'request': request}, many= True)
@@ -120,27 +102,3 @@ def all_vendor_product(request):
         product['ApiResponse'] = serialized_queryset
         response = JsonResponse(product)
         return response
-
-
-                                # <li className="header-li"  onClick={e => handleClick(e)} style={{cursor: 'pointer'}}>
-                                #     {
-                                #         currentUser ? (
-                                #             <div className="header-li-head" onClick={e => HandleSignOut(e)}>
-                                #                 <span className="header-li-text">Logout</span>
-                                #                 <span className="icon"><FontAwesomeIcon  icon={faUserCircle} /></span>
-                                #                 {/* <div className="icon">
-                                #                     <span className="user-circle">
-                                #                         <img src={require(`../../Media/images/site_images/food/stew.PNG`)}/>
-                                #                     </span>
-                                #                 </div> */}
-                                #             </div>
-                                #             )
-                                #             :
-                                #             (
-                                #             <div className="header-li-head">
-                                #                 <Link className="header-li-text" to="/auth/login">SignIn</Link>
-                                #                 <span className="icon"><FontAwesomeIcon  icon={faUserCircle} /></span>
-                                #             </div>
-                                #             )
-                                #     }
-                                # </li>

@@ -92,7 +92,7 @@
                 
                 <div class="reservation show-on-scroll">
                     <div class="box">
-                        <img style="width:150px;height:100%;object-fit:cover;" src="media/images/site_images/chef3.jpeg">
+                        <img style="width:150px;height:100%;object-fit:cover;" src="{% static 'img/site_images/chef3.jpeg' %}">
                         <div class="reservation-content">
                             <h1 class="">{{ vendor.store_name }} Store</h1>
                             <div class="block">
@@ -275,7 +275,7 @@
             document.querySelector('.modal-icon:last-child').querySelector('.qty').style.background= 'var(--gray)'
             $('.option-choice[data-index="dummy"]').css('display','none')
 
-            $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/restaurant.jpg')
+            $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/restaurant.jpg')
             $('.product-frame > .body > .bottom > .product-items > .product-block').remove()
             $('.product-frame > .body > .bottom > .delivery-address-details').css('display','none')
             $('.product-frame > .body > .bottom > .cart-items').css('display','none')

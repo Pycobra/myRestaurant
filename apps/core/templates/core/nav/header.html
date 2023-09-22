@@ -164,27 +164,27 @@
         }
     })
 
-    $(document).on(
-        'click', '.recipe > li', function(e){
-            headerPopUp.style.display = "none"; 
-            if (this.textContent === "Okra Recipe"){
-                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/ogbono.png')
-            }
-            if (this.textContent === "Ofe Onugbu Recipe"){
-                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/gbegiri&ewedu.png')
-            }
-            if (this.textContent === "Spaghetti Recipe"){
-                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/indomie.png')
-            }
-            if (this.textContent === "Jellof Rice Recipe"){
-                main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/jellof.png')
-            }
-            main.style.display = "none";
-            main2.style.display = "flex";
-            headerPopUp.style.display = "grid"; 
-            $('.recipe').slideUp(500)
-        }
-    ) 
+    // $(document).on(
+    //     'click', '.recipe > li', function(e){
+    //         headerPopUp.style.display = "none"; 
+    //         if (this.textContent === "Okra Recipe"){
+    //             main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/ogbono.png')
+    //         }
+    //         if (this.textContent === "Ofe Onugbu Recipe"){
+    //             main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/gbegiri&ewedu.png')
+    //         }
+    //         if (this.textContent === "Spaghetti Recipe"){
+    //             main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/indomie.png')
+    //         }
+    //         if (this.textContent === "Jellof Rice Recipe"){
+    //             main2.querySelector('img').setAttribute('src', 'media/images/site_images/food/jellof.png')
+    //         }
+    //         main.style.display = "none";
+    //         main2.style.display = "flex";
+    //         headerPopUp.style.display = "grid"; 
+    //         $('.recipe').slideUp(500)
+    //     }
+    // ) 
 
     $(document).on(
         'mouseleave', '.recipe1', function(e){
