@@ -160,7 +160,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myRestaurant.wsgi.application'
 
-DATABASES_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -172,19 +172,8 @@ DATABASES_URL = os.getenv("DATABASE_URL")
 #     }
 # }
 DATABASES = {
-    'default': dj_database_url.config(default=DATABASES_URL, conn_max_age=1800),
+    'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'myRestaurant',
-#         'USER': 'postgres',
-#         "PASSWORD": 'guht9876',
-#         "HOST": 'localhost',
-#         "PORT": '5432',
-#     }
-# }
 
 
 AUTH_PASSWORD_VALIDATORS = [
