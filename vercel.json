@@ -1,9 +1,8 @@
 {
-    "version": 2,
     "builds": [
         {
             "src": "myRestaurant/wsgi.py",
-            "use": "@vercel/python",
+            "use": "@ardnt/vercel-python-wsgi",
             "config": {"maxLambdaSize": "15mb", "runtime": "python3.8"}
         },
         {
@@ -21,7 +20,7 @@
         },
         {
             "src": "/(.*)",
-            "dest": "myRestaurant/wsgi.py",
+            "dest": "myRestaurant/wsgi.py"
         }
     ]
 }
