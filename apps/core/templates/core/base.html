@@ -43,13 +43,14 @@ fa-arrow-down-->
 
 </head>
 <body>
+    {% include './header-popup.html' %}
+    <div class="fixed-img">
+        <img src="{% static 'img/site_images/chef.jpg' %}">
+    </div>
+    {% include './nav/side-nav.html' %} 
+    {% include './nav/header.html' %} 
+        
     <main>
-        {% include './header-popup.html' %}
-        <div class="fixed-img">
-            <img src="{% static 'img/site_images/chef.jpg' %}">
-        </div>
-        {% include './nav/side-nav.html' %} 
-        {% include './nav/header.html' %} 
         <section id="section-container">
             <div id="container">
                 {% block content %}
@@ -61,18 +62,8 @@ fa-arrow-down-->
     {% include './footer.html' %} 
 
     {% block scripts %}
-    <script>
-
-        {% comment %} const person1 = {"NAME":"MAX"}
-        const person2 = {"NAME":"TREDES"}
-        const personData = new Map([[person1, [{"SEX":"MALE", "Age":12}]]])
-        personData.set(person2, [{"SEX":"FEMALE", "Age":15}])
-        console.log(personData, "y y y y y ")
-        console.log(personData.get(person2), "y y y y y ") {% endcomment %}
-    </script>
     {% endblock %}
 </body>
 </html>
 
-<!--CCCDC6 BBBCB6 ACADA8 746D69-->
 
