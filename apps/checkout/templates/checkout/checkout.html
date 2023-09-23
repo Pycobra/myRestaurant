@@ -66,6 +66,7 @@
                     if (userHasdeliveryopt && userHasdeliveryadd){
                         const total_paid = amt + item.delivery[0].fields.delivery_price
                         const amount = total_paid * 100
+                        alert(amount, amount, "errt")
                         var handler = PaystackPop.setup({
                             key: key,
                             email: item.address[0].fields.email,
