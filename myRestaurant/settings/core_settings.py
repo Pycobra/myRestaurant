@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.cart',
     'apps.checkout',
     'apps.vendor',
+    'mptt',
 ]
 PAYSTACK_PUBLIC_KEY =  os.getenv("PAYSTACK_PUBLIC_KEY")
 PAYSTACK_SECRET_KEY =  os.getenv("PAYSTACK_SECRET_KEY")
