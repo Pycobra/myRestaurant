@@ -49,7 +49,6 @@
     paystackPaymentForm.addEventListener('submit', payWithPaystack.bind(this), false);
     function payWithPaystack(e){
         e.preventDefault()
-        console.log("eeeeeeeeeeeee")
         paymentID = e.target.dataset.paymentid
         const user_authenticated = document.getElementById("authentication-status").value;
         if (user_authenticated == 'True'){ 
