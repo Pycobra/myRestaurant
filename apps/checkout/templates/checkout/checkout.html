@@ -52,7 +52,6 @@
         paymentID = e.target.dataset.paymentid
         const user_authenticated = document.getElementById("authentication-status").value;
         if (user_authenticated == 'True'){ 
-            console.log("eeeeeeettteeeeee")
             $.ajax({
                 url: "{% url 'checkout_:user_details_authenticated' %}",
                 method: 'get',
@@ -64,12 +63,8 @@
                 success: function (response) {
                     const {userHasdeliveryopt, userHasdeliveryadd, user_name, item, amt, key} = response
                     if (userHasdeliveryopt && userHasdeliveryadd){
-                        const total_paid = amt + item.delivery[0].fields.delivery_price
-                        const amount = total_paid * 100
-                        alert(amt)
-                        alert(item.delivery[0].fields.delivery_price)
-                        alert(total_paid)
-                        alert(amount)
+                        // const total_paid = amt + item.delivery[0].fields.delivery_price
+                        const amount = amt * 100
                         var handler = PaystackPop.setup({
                             key: key,
                             email: item.address[0].fields.email,
@@ -87,7 +82,7 @@
                                     method: 'post',
                                     data: {
                                         ref: response.reference,
-                                        total_paid: total_paid,
+                                        total_paid: amt,
                                         csrfmiddlewaretoken: "{{ csrf_token }}",
                                         action: 'paystack-payment',
                                     },
