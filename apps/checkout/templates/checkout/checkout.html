@@ -126,7 +126,7 @@
     var flutterwavePaymentForm = document.getElementById('flutterwavePaymentForm');
     flutterwavePaymentForm.addEventListener('submit', payWithFlutterwave.bind(this), false);
     {% comment %} function makePayment() { {% endcomment %}
-    function payWithFlutterwave() {
+    function payWithFlutterwave(e) {
         e.preventDefault()
         paymentID = e.target.dataset.paymentid
         const user_authenticated = document.getElementById("authentication-status").value;
