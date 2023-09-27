@@ -15,7 +15,7 @@ class Vendor(models.Model):
     vendor_image = models.ImageField(verbose_name=_("profile image"),
                                    help_text=_("Upload a your image"),
                                    upload_to="images/uploads/vendor/",
-                                   default="images/site_images/vendor-dummy.jpg")
+                                   default="images/shop.jpg")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
