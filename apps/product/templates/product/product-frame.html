@@ -370,7 +370,7 @@
                 $('.product-frame > .body > .bottom > .cart-items').css('display','none')
                 $('.product-frame > .body > .bottom > .product-items').css('display','flex')
                 
-                $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/restaurant.jpg')
+                $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/restaurant.jpg')
 
                 $('.modal-icon:nth-child(2) > i').css("color", 'var(--gray)')
                 $('.modal-icon:nth-child(2) > i').css("border", '2px solid var(--gray)')
@@ -380,11 +380,11 @@
                 $(this).addClass('active')
             }
             if ($(this).hasClass('two')){
-                $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/google-map2.png')
+                $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/google-map2.png')
                 createDeliveryContent(this)
             }
             if ($(this).hasClass('three')){
-                $('.product-frame > .body > .top.head-pic > img').attr('src', '/media/images/site_images/shopping-cart2.png')
+                $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/shopping-cart2.png')
                 createCartContent(this)
             }
         }
