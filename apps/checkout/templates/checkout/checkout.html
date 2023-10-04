@@ -152,7 +152,7 @@
                             currency: "NGN",
                             // {% comment %} paymentOptionID: "NGN", {% endcomment %}
                             payment_options: "card,mobilemoney,ussd",
-                            redirect_url:  "{% url 'checkout_:complete_payment' %}",
+                            redirect_url:  "{% url 'checkout_api_:complete_payment' %}",
                             customer: {
                                 email: email,
                                 name: user_name,
