@@ -13,5 +13,6 @@ urlpatterns = [
     path('payment-selections', views.payment_selections, name ='payment-selections'),
     path('complete-payment', views.complete_payment, name ='complete_payment'),
     path('paystack-public-key', views.paystack_public_key, name ='paystack_public_key'),
+    path('flutterwave-public-key', views.flutterwave_public_key, name ='flutterwave_public_key'),
     ]
 

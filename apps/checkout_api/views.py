@@ -35,15 +35,20 @@ def paystack_public_key(request):
     if request.method == 'GET':
         key = settings.PAYSTACK_PUBLIC_KEY
         return Response(key)
+@api_view(['GET'])
+def flutterwave_public_key(request):
+    if request.method == 'GET':
+        key = settings.FLUTTERWAVE_PUBLIC_KEY
+        return Response(key)
 
 @api_view(['POST'])
 def complete_payment(request):
     if request.method == 'POST':
-        payment_name = request.data['payment_name']
-        if payment_name == "flutterwave-payment":
-            ref =  request.data['tx_ref']
-        elif payment_name == "paystack-payment":
-            ref =  request.data['ref']
+        # payment_name = request.data['payment_name']
+        # if payment_name == "flutterwave-payment":
+        #     ref =  request.data['tx_ref']
+        # elif payment_name == "paystack-payment":
+        #     ref =  request.data['ref']
         orderReciept_serializer = OrderRecieptSerializer(data=request.data)
         if orderReciept_serializer.is_valid(raise_exception=True):
             orderReciept = orderReciept_serializer.save()

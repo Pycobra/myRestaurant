@@ -55,17 +55,18 @@ class OrderReciept(models.Model):
                 self.order_key = order_key
         super().save(*args, **kwargs)
 
-    def verify_payment(self, amount, ref, action):
+    def verify_payment(self, amount, ref, payment_name):
         paystack = Paystack()
         flutterwave = FlutterWave()
-        if action == "paystack-payment":
+        if payment_name == "paystack-payment":
             status, result = paystack.verify_payment(ref)
-        elif action == "flutterwave-payment":
+        elif payment_name == "flutterwave-payment":
             status, result = flutterwave.verify_payment(ref)
-        if status:
+        if status or status == "success":
             product_amount=int(amount)
             payment_amount = int(result['amount'])
-            if payment_amount / 100 == product_amount:
+            if (payment_amount / 100 == product_amount) and payment_name == "paystack-payment" or \
+                (payment_amount == product_amount) and payment_name == "flutterwave-payment":
                 return True
         return False
 

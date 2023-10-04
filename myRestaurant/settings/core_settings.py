@@ -72,6 +72,15 @@ MIDDLEWARE = [
 #     'http://localhost:8000',
 #     'http://127.0.0.1:8000',
 # ]
+# from corsheaders.defaults import default_headers
+# CORS_ALLOW_HEADERS = default_headers + (
+#     'Access-Control-Allow-Origin',
+# )
+# CORS_ORIGIN_WHITELIST = (
+#     "http://localhost:3000",
+#     "http://localhost:8000",
+#     'http://127.0.0.1:8000',
+# )
 # CORS_ALLOWED_METHODS = [
 #     'DELETE', 'GET', 
 #     'OPTIONS', "PATCH", 

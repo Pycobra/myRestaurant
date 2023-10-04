@@ -156,7 +156,7 @@ def user_details_authenticated(request):
         "userHasdeliveryadd": userHasdeliveryadd, 
         'amt': cart.get_total_cost(), 
         "item":item,
-        # "email": mydeliveryadd.email, 
+        "email": request.user.email, 
         # "delivery_price": mydeliveryopt.delivery_price,
         # "phone": mydeliveryadd.phone,
         'key': key,

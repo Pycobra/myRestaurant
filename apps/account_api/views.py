@@ -28,11 +28,8 @@ def create_account(request):
     if request.method == 'POST':
         serializer = SignupSerializer(data=request.data)
         if serializer.is_valid():
-            # user = serializer.validated_data
-            print('--for serializer serializer serializer serializer ||')
             serializer.save()
             return Response(None, status=status.HTTP_201_CREATED)
-        print(serializer.errors, 'i printed this')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

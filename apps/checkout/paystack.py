@@ -11,7 +11,7 @@ class Paystack:
         path = f'/transaction/verify/{ref}'
 
         headers = {
-            "Authorization": f"Bearer {'sk_test_8c231ece81620c5dfe92377a418f6165acec884d'}",
+            "Authorization": f"Bearer {f'{self.PAYSTACK_SECRET_KEY}'}",
             "Content-Type": 'application/json',
         }
         url = self.base_url + path

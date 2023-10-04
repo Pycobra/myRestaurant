@@ -124,7 +124,7 @@
 
     var flutterwavePaymentForm = document.getElementById('flutterwavePaymentForm');
     flutterwavePaymentForm.addEventListener('submit', payWithFlutterwave.bind(this), false);
-    {% comment %} function makePayment() { {% endcomment %}
+    // {% comment %} function makePayment() { {% endcomment %}
     function payWithFlutterwave(e) {
         e.preventDefault()
         paymentID = e.target.dataset.paymentid
@@ -133,31 +133,27 @@
             $.ajax({
                 url: "{% url 'checkout_:user_details_authenticated' %}",
                 method: 'get',
-                {% comment %} paymentID: {% endcomment %}
                 data: {
                     csrfmiddlewaretoken: "{{ csrf_token }}",
                     action: 'flutterwave-payment',
                     paymentID
                 },
                 success: function (response) {
-                    const {userHasdeliveryopt, userHasdeliveryadd, amt, email, key} = response
+                    const {userHasdeliveryopt, userHasdeliveryadd, user_name, email, item, amt, key} = response
                     if (userHasdeliveryopt && userHasdeliveryadd){
+                        // const total_paid = amt + item.delivery[0].fields.delivery_price
+                        const amount = amt * 100
                         FlutterwaveCheckout({
                             public_key: key,
                             tx_ref: ''+Math.floor((Math.random() * 1000000000) + 1),    
-                            amount: amt * 100,
+                            amount: amt,
                             currency: "NGN",
-                            {% comment %} paymentOptionID: "NGN", {% endcomment %}
-                            payment_options: "card, mobilemoneyghana, ussd",
+                            // {% comment %} paymentOptionID: "NGN", {% endcomment %}
+                            payment_options: "card,mobilemoney,ussd",
                             redirect_url:  "{% url 'checkout_:complete_payment' %}",
-                            meta: {
-                                consumer_id: 23,
-                                consumer_mac: "92a3-912ba-1192a",
-                            },
                             customer: {
                                 email: email,
-                                phone_number: "08102909304",
-                                name: "Rose DeWitt Bukater",
+                                name: user_name,
                             },
                             customizations: {
                                 title: "Naija Cuisines",
@@ -175,43 +171,47 @@
                     else if (!userHasdeliveryadd){
                         alert("you have not chosen an address")
                     }
+                },
+                error: function (error) {
+                    console.log(error, 'error response response')
                 }
-
             });
         }
         else if (user_authenticated == 'False'){
-            $('.login').css('display','flex')
+            $('.login').css('display','grid')
+            document.querySelector('.hiddennInputForProductFrame').value = 'true'
+            $('.product-frame').css('display','none')
         }
     }
 
 
 
 
-    {% comment %} function payWithFlutterwave() {
-        FlutterwaveCheckout({
-            public_key: "FLWPUBK_TEST-b7eb58ee9768abf02faebf8420d803b5-X",
-            tx_ref: "titanic-48981487343MDI0NzMx",
-            tx_ref: ''+Math.floor((Math.random() * 1000000000) + 1),
-            amount: 54600,
-            currency: "NGN",
-            payment_options: "card, mobilemoneyghana, ussd",
-            redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
-            meta: {
-                consumer_id: 23,
-                consumer_mac: "92a3-912ba-1192a",
-            },
-            customer: {
-                email: "rose@unsinkableship.com",
-                phone_number: "08102909304",
-                name: "Rose DeWitt Bukater",
-            },
-            customizations: {
-                title: "The Titanic Store",
-                description: "Payment for an awesome cruise",
-                logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
-            },
-        });
-    } {% endcomment %}
+    // {% comment %} function payWithFlutterwave() {
+    //     FlutterwaveCheckout({
+    //         public_key: "FLWPUBK_TEST-b7eb58ee9768abf02faebf8420d803b5-X",
+    //         tx_ref: "titanic-48981487343MDI0NzMx",
+    //         tx_ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+    //         amount: 54600,
+    //         currency: "NGN",
+    //         payment_options: "card, mobilemoneyghana, ussd",
+    //         redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+    //         meta: {
+    //             consumer_id: 23,
+    //             consumer_mac: "92a3-912ba-1192a",
+    //         },
+    //         customer: {
+    //             email: "rose@unsinkableship.com",
+    //             phone_number: "08102909304",
+    //             name: "Rose DeWitt Bukater",
+    //         },
+    //         customizations: {
+    //             title: "The Titanic Store",
+    //             description: "Payment for an awesome cruise",
+    //             logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+    //         },
+    //     });
+    // } {% endcomment %}
 </script>
 {% endblock %}
 
