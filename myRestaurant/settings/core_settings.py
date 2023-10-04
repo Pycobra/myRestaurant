@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'lazyloader',
     'apps.core',
     'apps.account',
     'apps.account_api',

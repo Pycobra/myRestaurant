@@ -5,7 +5,7 @@
     <div class="slideshow-slider">
         {% for img in images %}
         <div class="slide fade">
-            <img src="{% static 'img/site_images/{{img}}.jpg' %}" />
+            <img src="{% static 'img/site_images/{{img}}.jpg' %}"  loading="lazy" />
         </div>
         {% endfor %}
     </div>

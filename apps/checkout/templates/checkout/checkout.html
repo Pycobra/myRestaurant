@@ -27,13 +27,15 @@
                 {% if payment.name == "FlutterWave" %}
                 <form data-paymentID="{{payment.id}}" id="flutterwavePaymentForm">  
                     <button data-paymentID="{{payment.id}}" type="submit" class="flutterwave">
-                        <img style="height:20px;object-fit:cover;" src="{% static 'img/flutterwave/flutterwave.png' %}">    
+                        <img style="height:20px;object-fit:cover;" 
+                            src="{% static 'img/flutterwave/flutterwave.png' %}" loading="lazy"/>    
                     </button> 
                 </form>
                 {% elif payment.name == "Paystack" %}
                 <form data-paymentID="{{payment.id}}" id="paystackPaymentForm">   
                     <button data-paymentID="{{payment.id}}" type="submit" class="paystack">
-                        <img style="width:100px;height:25px;object-fit:cover;" src="{% static 'img/paystack/Paystack.png' %}">    
+                        <img style="width:100px;height:25px;object-fit:cover;" 
+                            src="{% static 'img/paystack/Paystack.png' %}" loading="lazy"/>    
                     </button>
                 </form>
                 {% endif %}

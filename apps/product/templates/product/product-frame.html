@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <img class="holding-chef" src="{% static 'img/site_images/chef2.PNG' %}">
+    <img class="holding-chef" src="{% static 'img/site_images/chef2.PNG' %}" loading="lazy" />
 
     <div class="body">
         <div class="top head-pic" style="position:relative;display:flex;justify-content:center;">
@@ -27,7 +27,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <img>
+            <img loading="lazy">
         </div>
 
         <div class="bottom">
@@ -315,6 +315,7 @@
                         $('.cart-item-dummy').css('display','flex')
                         $('.cart-item-dummy').attr('data-index', '' + values.id + '')
                         $('.cart-item-dummy > .first-block > .block1 > img').attr('src', '/media/' + values.images + '')
+                        $('.cart-item-dummy > .first-block > .block1 > img').attr('loading', 'lazy')
                         $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-1 > .title').text(values.title)
                         $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-1 > .price1').text(values.price)
                         $('.cart-item-dummy > .first-block > .block2 > .innerblock > .first-line > .block-2 > .icons > button').attr('data-index', '' + values.id + '')
@@ -371,6 +372,7 @@
                 $('.product-frame > .body > .bottom > .product-items').css('display','flex')
                 
                 $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/restaurant.jpg')
+                $('.product-frame > .body > .top.head-pic > img').attr('loading', 'lazy')
 
                 $('.modal-icon:nth-child(2) > i').css("color", 'var(--gray)')
                 $('.modal-icon:nth-child(2) > i').css("border", '2px solid var(--gray)')
@@ -381,10 +383,12 @@
             }
             if ($(this).hasClass('two')){
                 $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/google-map2.png')
+                $('.product-frame > .body > .top.head-pic > img').attr('loading', 'lazy')
                 createDeliveryContent(this)
             }
             if ($(this).hasClass('three')){
                 $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/shopping-cart2.png')
+                $('.product-frame > .body > .top.head-pic > img')$('.product-frame > .body > .top.head-pic > img').attr('loading', 'lazy')
                 createCartContent(this)
             }
         }

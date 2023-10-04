@@ -67,7 +67,7 @@
                         {% for i in vendor.vendors_products.all|slice:":5" %}
                         <span class="board-img img-1">
                             <span data-index="img-1" class="text">{{ i.category }} Food</span>
-                            <img src="{{ i.images.url }}" alt="food-image">
+                            <img src="{{ i.images.url }}" alt="food-image" loading="lazy">
                         </span>
                         {% endfor %}
                     </div>
@@ -83,7 +83,7 @@
                                 <span>{{ i.description }}</span>
                             </div>
                             <div class="right">
-                                <img src="{{ i.images.url }}" alt="food-image">
+                                <img src="{{ i.images.url }}" alt="food-image" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                 
                 <div class="reservation show-on-scroll">
                     <div class="box">
-                        <img style="width:150px;height:100%;object-fit:cover;" src="{% static 'img/site_images/chef3.jpeg' %}">
+                        <img style="width:150px;height:100%;object-fit:cover;" src="{% static 'img/site_images/chef3.jpeg' %}" loading="lazy">
                         <div class="reservation-content">
                             <h1 class="">{{ vendor.store_name }} Store</h1>
                             <div class="block">
@@ -276,6 +276,7 @@
             $('.option-choice[data-index="dummy"]').css('display','none')
 
             $('.product-frame > .body > .top.head-pic > img').attr('src', '/static/img/site_images/restaurant.jpg')
+            $('.product-frame > .body > .top.head-pic > img').attr('loading', 'lazy')
             $('.product-frame > .body > .bottom > .product-items > .product-block').remove()
             $('.product-frame > .body > .bottom > .delivery-address-details').css('display','none')
             $('.product-frame > .body > .bottom > .cart-items').css('display','none')
@@ -341,7 +342,7 @@
                 </div> \
             </div> \
             <div class="right"> \
-                <img src="/media/' + values.fields.images + '" alt="an-image"> \
+                <img loading="lazy" src="/media/' + values.fields.images + '" alt="an-image"> \
             </div>'
             ProductBlock.insertAdjacentElement('beforeend', ProductCard)
          })

@@ -74,6 +74,7 @@
             }
             $('.option-choice[data-index="dummy"] > .inner > .bottom > button').attr('data-index','' + id+ '')
             $('.option-choice[data-index="dummy"] > .inner > .top > .img-place > img').attr('src',img)
+            $('.option-choice[data-index="dummy"] > .inner > .top > .img-place > img').attr('loading',img)
             $('.option-choice[data-index="dummy"]').css('display','flex')
             $.ajax({
                 type:"POST",
