@@ -398,7 +398,7 @@ button.keepMoving-jump-icon{
 }
 
 
-@media screen and (max-width:600px){
+@media screen and (max-width:,540px){
     .food-display .food-card{
         flex-grow: 1;
     }
@@ -449,6 +449,9 @@ button.keepMoving-jump-icon{
     }
     .reservation .box .reservation-content {
         padding: 7px;
+    }
+    reservation .box{;
+        margin: auto;
     }
 }
 @media screen and (max-width:375px){
