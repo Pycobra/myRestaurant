@@ -282,10 +282,10 @@ section.container{
 }
 .reservation  .box  .reservation-content h1{
     font-size: 20px;
-    margin-btm-layout: 15px;
+    margin-bottom: 15px;
 }
 .reservation  .box  .reservation-content h2{
-    margin-btm-layout: 10px;
+    margin-bottom: 10px;
 }
 .reservation  .box  .reservation-content .block{
     display: grid;
