@@ -462,6 +462,9 @@ button.keepMoving-jump-icon{
     .board .board-img .text{
         font-size: 1em;
     }
+    reservation .box{
+        margin: auto;
+    }
 }
 
 
