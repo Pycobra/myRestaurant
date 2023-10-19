@@ -450,7 +450,7 @@ button.keepMoving-jump-icon{
     .reservation .box .reservation-content {
         padding: 7px;
     }
-    reservation .box{
+    .reservation .box{
         margin: auto;
     }
 }
@@ -461,9 +461,6 @@ button.keepMoving-jump-icon{
     }
     .board .board-img .text{
         font-size: 1em;
-    }
-    reservation .box{
-        margin: auto;
     }
 }
 
