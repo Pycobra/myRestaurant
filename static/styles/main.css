@@ -102,16 +102,6 @@ h1, h2, h3, h4, ul, p{
     100%  {transform: translateY(0);}
   }
 
-
-
-
-@media screen and (max-width:1000px){
-    .fixed-img img{
-        height: 390px;
-        width: 35vw;
-    }
-}
-
 @media screen and (max-width:768px){
     .fixed-img {
         top: 12vh;
