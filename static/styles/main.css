@@ -108,7 +108,7 @@ h1, h2, h3, h4, ul, p{
     }
     .fixed-img img {
         height: 390px;
-        width: 35vw;
+        width: 41vw;
     }
 }
 @media screen and (max-width:540px){
