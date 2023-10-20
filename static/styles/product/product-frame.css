@@ -150,14 +150,14 @@
     justify-content: center;
     align-items: center;
     background: var(--gray);
-    color:var(--white);
-    margin-left:1px;
-    width:14px;
-    border-radius:100px;
-    font-size:10px;
-    font-weight:700;
-    border:1px solid rgba(255,255,255,0.8);
-    position:absolute;
+    color: var(--white);
+    margin-left: 1px;
+    width: 12px;
+    border-radius: 100px;
+    font-size: 8px;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.8);
+    position: absolute;
     top: 19px;
     left: 17px;
 }
