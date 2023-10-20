@@ -431,9 +431,6 @@ button.keepMoving-jump-icon{
     .homepage-top-layout{
       height: 50vh;
     }
-    .homepage-top-layout{
-        align-items: center;
-    }
     .reservation .box .reservation-content h1 {
         font-size: 17px;
     }
