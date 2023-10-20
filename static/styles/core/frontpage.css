@@ -243,7 +243,7 @@ section.container{
     width: 100%;
     opacity: 1;
     transform: rotateZ(0);
-    margin-btm-layout: 150px;
+    margin-bottom: 150px;
 }
 .reservation .envelope{
     position:absolute;
@@ -283,7 +283,7 @@ section.container{
 .reservation  .box  .reservation-content h1{
     font-size: 20px;
     margin-bottom: 15px;
-    border-bottom: 2px solid var(--gray);
+    border-bottom: 2px solid white;
 }
 .reservation  .box  .reservation-content h2{
     margin-bottom: 10px;
