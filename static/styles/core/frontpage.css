@@ -243,7 +243,7 @@ section.container{
     width: 100%;
     opacity: 1;
     transform: rotateZ(0);
-    margin-btm-layout: 150px;
+    margin-bottom: 150px;
 }
 .reservation .envelope{
     position:absolute;
@@ -282,10 +282,11 @@ section.container{
 }
 .reservation  .box  .reservation-content h1{
     font-size: 20px;
-    margin-btm-layout: 15px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid white;
 }
 .reservation  .box  .reservation-content h2{
-    margin-btm-layout: 10px;
+    margin-bottom: 10px;
 }
 .reservation  .box  .reservation-content .block{
     display: grid;
@@ -413,7 +414,7 @@ button.keepMoving-jump-icon{
       font-size:17px;
     }
     .homepage-top-layout .site-intro h3{
-        font-size:11px;
+        font-size:10px;
         letter-spacing: 1.5px;
         margin-top: 5px;
     }
@@ -430,15 +431,11 @@ button.keepMoving-jump-icon{
     .homepage-top-layout{
       height: 50vh;
     }
-    .homepage-top-layout{
-        align-items: center;
-    }
     .reservation .box .reservation-content h1 {
         font-size: 17px;
     }
     .reservation .box .reservation-content h2 {
-        font-size: 15px; 
-        margin-bottom: 5px;
+        font-size: 12px; 
     }
     .reservation .box .reservation-content  .btn-place{
         margin-top:5px;
@@ -449,6 +446,9 @@ button.keepMoving-jump-icon{
     }
     .reservation .box .reservation-content {
         padding: 7px;
+    }
+    .reservation .box{
+        margin: auto;
     }
 }
 @media screen and (max-width:375px){

@@ -103,26 +103,17 @@ h1, h2, h3, h4, ul, p{
     100%  {transform: translateY(0);}
   }
 
-
-
-
-@media screen and (max-width:1000px){
-    .fixed-img img{
-        height: 390px;
-        width: 35vw;
-    }
-}
-
 @media screen and (max-width:768px){
-    .fixed-img img{
-        width: 38vw;
+    .fixed-img {
+        top: 12vh;
+    }
+    .fixed-img img {
+        height: 390px;
+        width: 41vw;
     }
 }
-@media screen and (max-width:600px){
-    .fixed-img {
-        top: 15vh;
-    }
-    .fixed-img img{
+@media screen and (max-width:540px){
+    .fixed-img img {
         height: 240px;
     }
 }
