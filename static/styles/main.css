@@ -106,6 +106,10 @@ h1, h2, h3, h4, ul, p{
     .fixed-img {
         top: 12vh;
     }
+    .fixed-img img {
+        height: 390px;
+        width: 35vw;
+    }
 }
 
 
