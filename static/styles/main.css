@@ -50,6 +50,7 @@ body {
     overflow-x:hidden;
     scroll-behavior: smooth;
     color: var(--normal);
+    font-family: 'DM Sans', sans-serif;
 }
 header ul,
 section a,
